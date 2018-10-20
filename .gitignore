@@ -1,0 +1,6 @@
+# pyevn
+.python-version
+# pycharm
+.idea
+# bytecode
+__pycache__
