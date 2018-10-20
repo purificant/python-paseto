@@ -2,6 +2,7 @@ import os
 import hmac
 import hashlib
 from .util import pae, b64, b64decode
+from paseto.exceptions import InvalidHeader, InvalidFooter
 from nacl.bindings import (
     crypto_aead_xchacha20poly1305_ietf_encrypt,
     crypto_aead_xchacha20poly1305_ietf_decrypt,
@@ -66,13 +67,13 @@ class Version2:
         #        they do so using a constant-time string compare function.
         if footer is not None:
             if not hmac.compare_digest(b64(footer), message.split(b".")[-1]):
-                raise Exception("Unexpected footer found")
+                raise InvalidFooter("Invalid message footer")
 
         # 2.  Verify that the message begins with "v2.local.", otherwise throw
         #        an exception.  This constant will be referred to as "h".
         header = Version2.HEADER_LOCAL
         if not message.startswith(header):
-            raise Exception("Unexpected header found")
+            raise InvalidHeader("Invalid message header")
 
         # 3.  Decode the payload ("m" sans "h", "f", and the optional trailing
         #        period between "m" and "f") from base64url to raw binary.  Set:

@@ -4,3 +4,5 @@
 .idea
 # bytecode
 __pycache__
+# pytest-cov
+.coverage
