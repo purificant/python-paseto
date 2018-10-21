@@ -60,4 +60,4 @@ class TestVersion2(object):
         ],
     )
     def test_decode_message(self, message, header, expected):
-        assert Version2.decode_message(message, header) == expected
+        assert Version2.decode_message(message, len(header)) == expected

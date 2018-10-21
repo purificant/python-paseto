@@ -81,7 +81,7 @@ class Version2:
         #
         #        *  "n" to the leftmost 24 bytes
         #        *  "c" to the middle remainder of the payload, excluding "n".
-        raw_inner_message = Version2.decode_message(message, header)
+        raw_inner_message = Version2.decode_message(message, len(header))
 
         nonce = raw_inner_message[:24]
         cipher_text = raw_inner_message[24:]
@@ -150,7 +150,7 @@ class Version2:
         #        *  "s" to the rightmost 64 bytes
         #
         #        *  "m" to the leftmost remainder of the payload, excluding "s"
-        raw_inner_message = Version2.decode_message(signed_message, header)
+        raw_inner_message = Version2.decode_message(signed_message, len(header))
 
         signature = raw_inner_message[-64:]
         message = raw_inner_message[:-64]
@@ -174,7 +174,8 @@ class Version2:
             raise InvalidHeader("Invalid message header")
 
     @staticmethod
-    def decode_message(message: bytes, header: bytes):
-        message_without_header = message.lstrip(header)
-        message_without_header_and_footer = message_without_header.split(b".")[0]
-        return b64decode(message_without_header_and_footer)
+    def decode_message(message: bytes, header_length: int) -> bytes:
+        return b64decode(
+            # strip header and remove any footer
+            message[header_length:].split(b".")[0]
+        )
