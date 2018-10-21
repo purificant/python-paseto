@@ -8,13 +8,17 @@ from nacl.bindings import (
     crypto_aead_xchacha20poly1305_ietf_decrypt,
 )
 
+# from nacl.bindings.crypto_sign import crypto_sign, crypto_sign_open
+import pysodium
+
 
 class Version2:
 
     HEADER_LOCAL = b"v2.local."
+    HEADER_PUBLIC = b"v2.public."
 
     @staticmethod
-    def encrypt(message: bytes, key: bytes, footer: bytes = None):
+    def encrypt(message: bytes, key: bytes, footer: bytes = b""):
         """ https://tools.ietf.org/html/draft-paragon-paseto-rfc-00#section-5.3.1 """
 
         # Given a message "m", key "k", and optional footer "f".
@@ -51,13 +55,13 @@ class Version2:
         #
         #        *  ...where || means "concatenate"
         ret = header + b64(nonce + cipher_text)
-        if footer is not None:
+        if footer:
             ret += b"." + b64(footer)
 
         return ret
 
     @staticmethod
-    def decrypt(message: bytes, key: bytes, footer: bytes = None):
+    def decrypt(message: bytes, key: bytes, footer: bytes = b""):
         """ https://tools.ietf.org/html/draft-paragon-paseto-rfc-00#section-5.3.2 """
 
         # Given a message "m", key "k", and optional footer "f".
@@ -65,25 +69,19 @@ class Version2:
         #    1.  If "f" is not empty, implementations MAY verify that the value
         #        appended to the token matches some expected string "f", provided
         #        they do so using a constant-time string compare function.
-        if footer is not None:
-            if not hmac.compare_digest(b64(footer), message.split(b".")[-1]):
-                raise InvalidFooter("Invalid message footer")
+        Version2.check_footer(message, footer)
 
         # 2.  Verify that the message begins with "v2.local.", otherwise throw
         #        an exception.  This constant will be referred to as "h".
         header = Version2.HEADER_LOCAL
-        if not message.startswith(header):
-            raise InvalidHeader("Invalid message header")
+        Version2.check_header(message, header)
 
         # 3.  Decode the payload ("m" sans "h", "f", and the optional trailing
         #        period between "m" and "f") from base64url to raw binary.  Set:
         #
         #        *  "n" to the leftmost 24 bytes
         #        *  "c" to the middle remainder of the payload, excluding "n".
-
-        message_without_header = message.lstrip(header)
-        message_without_header_and_footer = message_without_header.split(b".")[0]
-        raw_inner_message = b64decode(message_without_header_and_footer)
+        raw_inner_message = Version2.decode_message(message, header)
 
         nonce = raw_inner_message[:24]
         cipher_text = raw_inner_message[24:]
@@ -99,3 +97,84 @@ class Version2:
         return crypto_aead_xchacha20poly1305_ietf_decrypt(
             cipher_text, pre_auth, nonce, key
         )
+
+    @staticmethod
+    def sign(message: bytes, secret_key: bytes, footer: bytes = b""):
+        """ https://tools.ietf.org/html/draft-paragon-paseto-rfc-00#section-5.3.3 """
+
+        # Given a message "m", Ed25519 secret key "sk", and optional footer "f"
+        #    (which defaults to empty string):
+
+        # 1.  Set "h" to "v2.public."
+        header = Version2.HEADER_PUBLIC
+
+        # 2.  Pack "h", "m", and "f" together (in that order) using PAE. We'll call this "m2".
+        message2 = pae([header, message, footer])
+
+        # 3.  Sign "m2" using Ed25519 "sk".  We'll call this "sig".
+        signature = pysodium.crypto_sign_detached(message2, secret_key)
+
+        # 4.  If "f" is:
+        #
+        #        *  Empty: return h || b64(m || sig)
+        #
+        #        *  Non-empty: return h || b64(m || sig) || "." || b64(f)
+        #
+        #        *  ...where || means "concatenate"
+        ret = header + b64(message + signature)
+        if footer:
+            ret += b"." + b64(footer)
+
+        return ret
+
+    @staticmethod
+    def verify(signed_message: bytes, public_key: bytes, footer: bytes = b""):
+        """ https://tools.ietf.org/html/draft-paragon-paseto-rfc-00#section-5.3.4 """
+
+        # Given a signed message "sm", public key "pk", and optional footer "f"
+        #    (which defaults to empty string):
+
+        # 1.  If "f" is not empty, implementations MAY verify that the value
+        #        appended to the token matches some expected string "f", provided
+        #        they do so using a constant-time string compare function.
+        Version2.check_footer(signed_message, footer)
+
+        # 2.  Verify that the message begins with "v2.public.", otherwise throw
+        #        an exception.  This constant will be referred to as "h".
+        header = Version2.HEADER_PUBLIC
+        Version2.check_header(signed_message, header)
+
+        # 3.  Decode the payload ("sm" sans "h", "f", and the optional trailing
+        #        period between "m" and "f") from base64url to raw binary.  Set:
+        #
+        #        *  "s" to the rightmost 64 bytes
+        #
+        #        *  "m" to the leftmost remainder of the payload, excluding "s"
+        raw_inner_message = Version2.decode_message(signed_message, header)
+
+        signature = raw_inner_message[-64:]
+        message = raw_inner_message[:-64]
+
+        # 4.  Pack "h", "m", and "f" together (in that order) using PAE. We'll call this "m2".
+        message2 = pae([header, message, footer])
+
+        # 5.  Use Ed25519 to verify that the signature is valid for the message
+        # 6.  If the signature is valid, return "m".  Otherwise, throw an exception.
+        pysodium.crypto_sign_verify_detached(signature, message2, public_key)
+        return message
+
+    @staticmethod
+    def check_footer(message: bytes, footer: bytes):
+        if footer and not hmac.compare_digest(b64(footer), message.split(b".")[-1]):
+            raise InvalidFooter("Invalid message footer")
+
+    @staticmethod
+    def check_header(message: bytes, header: bytes):
+        if not message.startswith(header):
+            raise InvalidHeader("Invalid message header")
+
+    @staticmethod
+    def decode_message(message: bytes, header: bytes):
+        message_without_header = message.lstrip(header)
+        message_without_header_and_footer = message_without_header.split(b".")[0]
+        return b64decode(message_without_header_and_footer)
