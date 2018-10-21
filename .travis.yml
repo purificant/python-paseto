@@ -1,0 +1,19 @@
+language: python
+python:
+  - "3.6"
+  - "3.7"
+
+dist: xenial
+sudo: true
+
+install:
+  # needed by pysodium
+  - sudo apt-get install libsodium18
+  # recommended way to install poetry
+  - curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
+  # activate poetry command
+  - source $HOME/.poetry/env
+  - poetry install
+
+script:
+  - pytest
