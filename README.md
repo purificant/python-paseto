@@ -1,6 +1,9 @@
 # python-paseto
 Platform-Agnostic Security Tokens for Python
 
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
+
+
 # Installation
 Clone the repository, in the future a pip install will be available.
 
@@ -14,7 +17,7 @@ poetry install
 
 Run tests
 ```bash
-poetry run pytest /tests
+pytest
 ```
 
 # Low level API
@@ -40,3 +43,8 @@ assert plain_text == message
 # High level API
 In the future a high level API will provide developer friendly access to low level API
 and support easy integration into other projects.
+
+Code formatting is managed by [black](https://github.com/ambv/black). To format run
+```bash
+black .
+```
