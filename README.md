@@ -21,6 +21,12 @@ Run tests
 pytest
 ```
 
+To check code coverage run
+```bash
+coverage run -m pytest
+coverage report
+```
+
 # Low level API
 Initial implementation of the V2 encrypt / decrypt functions. Alpha version.
 Low level API focuses on solid, high quality, production ready primitives
