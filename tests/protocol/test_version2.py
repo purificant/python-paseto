@@ -6,22 +6,22 @@ from nacl.bindings.crypto_sign import crypto_sign_seed_keypair, crypto_sign_SEED
 
 
 class TestVersion2(object):
-    def test_encrypt_decrypt(self):
+    @pytest.mark.parametrize("footer", [b"", b"baz"])
+    def test_encrypt_decrypt(self, footer: bytes):
         message = b"foo"
         key = b"0" * 32
-        footer = b"baz"
 
         token = Version2.encrypt(message, key, footer)
         plain_text = Version2.decrypt(token, key, footer)
         assert plain_text == message
 
-    def test_sign_verify(self):
+    @pytest.mark.parametrize("footer", [b"", b"some_footer"])
+    def test_sign_verify(self, footer: bytes):
         keys = crypto_sign_seed_keypair(b"\x00" * crypto_sign_SEEDBYTES)
 
         message = b"foo"
         public_key = keys[0]
         secret_key = keys[1]
-        footer = b""
 
         signed = Version2.sign(message, secret_key, footer)
         assert Version2.verify(signed, public_key, footer) == message
