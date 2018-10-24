@@ -12,9 +12,10 @@ pysodium = "^0.7.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.9"
-pytest-cov = "^2.6"
 black = "^18.3-alpha.0"
 pylama = "^7.6"
+tox = "^3.5"
+coverage = "^4.5"
 
 [build-system]
 requires = ["poetry>=0.12"]

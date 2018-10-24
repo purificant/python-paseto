@@ -1,0 +1,8 @@
+# .coveragerc to control coverage.py
+[run]
+# cover branches: https://coverage.readthedocs.io/en/latest/branch.html#branch
+branch = True
+source = paseto
+
+[report]
+show_missing = True
