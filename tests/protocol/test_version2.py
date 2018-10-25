@@ -26,6 +26,10 @@ class TestVersion2(object):
         signed = Version2.sign(message, secret_key, footer)
         assert Version2.verify(signed, public_key, footer) == message
 
+    def test_get_nonce(self):
+        nonce = Version2.get_nonce(b"", b"")
+        assert len(nonce) == Version2.NONCE_SIZE
+
     def test_decrypt_invalid_footer(self):
         with pytest.raises(InvalidFooter):
             Version2.decrypt(b"header.message.footer", b"a key", b"some_other_footer")

@@ -16,6 +16,7 @@ class Version2:
 
     HEADER_LOCAL = b"v2.local."
     HEADER_PUBLIC = b"v2.public."
+    NONCE_SIZE = 24
 
     @staticmethod
     def encrypt(message: bytes, key: bytes, footer: bytes = b""):
@@ -36,7 +37,7 @@ class Version2:
         #        *  This step is to ensure that an RNG failure does not result in
         #           a nonce-misuse condition that breaks the security of our
         #           stream cipher.
-        nonce = hashlib.blake2b(message, key=random_bytes, digest_size=24).digest()
+        nonce = Version2.get_nonce(message, random_bytes)
 
         # 4. Pack "h", "n", and "f" together (in that order) using PAE
         pre_auth = pae([header, nonce, footer])
@@ -162,6 +163,12 @@ class Version2:
         # 6.  If the signature is valid, return "m".  Otherwise, throw an exception.
         pysodium.crypto_sign_verify_detached(signature, message2, public_key)
         return message
+
+    @staticmethod
+    def get_nonce(message: bytes, random_bytes: bytes):
+        return hashlib.blake2b(
+            message, key=random_bytes, digest_size=Version2.NONCE_SIZE
+        ).digest()
 
     @staticmethod
     def check_footer(message: bytes, footer: bytes):
