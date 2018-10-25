@@ -28,7 +28,7 @@ class Version2:
         header = Version2.HEADER_LOCAL
 
         # 2.  Generate 24 random bytes from the OS's CSPRNG.
-        random_bytes = os.urandom(24)
+        random_bytes = os.urandom(Version2.NONCE_SIZE)
 
         # 3.  Calculate BLAKE2b of the message "m" with the output of step 2 as
         #        the key, with an output length of 24.  This will be our nonce,
@@ -84,8 +84,8 @@ class Version2:
         #        *  "c" to the middle remainder of the payload, excluding "n".
         raw_inner_message = Version2.decode_message(message, len(header))
 
-        nonce = raw_inner_message[:24]
-        cipher_text = raw_inner_message[24:]
+        nonce = raw_inner_message[:Version2.NONCE_SIZE]
+        cipher_text = raw_inner_message[Version2.NONCE_SIZE:]
 
         # 4.  Pack "h", "n", and "f" together (in that order) using PAE (see
         #        Section 2.2).  We'll call this "preAuth"
