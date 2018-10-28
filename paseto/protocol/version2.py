@@ -19,7 +19,7 @@ class Version2:
     NONCE_SIZE = 24
 
     @staticmethod
-    def encrypt(message: bytes, key: bytes, footer: bytes = b""):
+    def encrypt(message: bytes, key: bytes, footer: bytes = b"") -> bytes:
         """ https://tools.ietf.org/html/draft-paragon-paseto-rfc-00#section-5.3.1 """
 
         # Given a message "m", key "k", and optional footer "f".
@@ -84,8 +84,8 @@ class Version2:
         #        *  "c" to the middle remainder of the payload, excluding "n".
         raw_inner_message = Version2.decode_message(message, len(header))
 
-        nonce = raw_inner_message[:Version2.NONCE_SIZE]
-        cipher_text = raw_inner_message[Version2.NONCE_SIZE:]
+        nonce = raw_inner_message[: Version2.NONCE_SIZE]
+        cipher_text = raw_inner_message[Version2.NONCE_SIZE :]
 
         # 4.  Pack "h", "n", and "f" together (in that order) using PAE (see
         #        Section 2.2).  We'll call this "preAuth"
@@ -100,7 +100,7 @@ class Version2:
         )
 
     @staticmethod
-    def sign(message: bytes, secret_key: bytes, footer: bytes = b""):
+    def sign(message: bytes, secret_key: bytes, footer: bytes = b"") -> bytes:
         """ https://tools.ietf.org/html/draft-paragon-paseto-rfc-00#section-5.3.3 """
 
         # Given a message "m", Ed25519 secret key "sk", and optional footer "f"
@@ -129,7 +129,7 @@ class Version2:
         return ret
 
     @staticmethod
-    def verify(signed_message: bytes, public_key: bytes, footer: bytes = b""):
+    def verify(signed_message: bytes, public_key: bytes, footer: bytes = b"") -> bytes:
         """ https://tools.ietf.org/html/draft-paragon-paseto-rfc-00#section-5.3.4 """
 
         # Given a signed message "sm", public key "pk", and optional footer "f"
@@ -165,18 +165,18 @@ class Version2:
         return message
 
     @staticmethod
-    def get_nonce(message: bytes, random_bytes: bytes):
+    def get_nonce(message: bytes, random_bytes: bytes) -> bytes:
         return hashlib.blake2b(
             message, key=random_bytes, digest_size=Version2.NONCE_SIZE
         ).digest()
 
     @staticmethod
-    def check_footer(message: bytes, footer: bytes):
+    def check_footer(message: bytes, footer: bytes) -> None:
         if footer and not hmac.compare_digest(b64(footer), message.split(b".")[-1]):
             raise InvalidFooter("Invalid message footer")
 
     @staticmethod
-    def check_header(message: bytes, header: bytes):
+    def check_header(message: bytes, header: bytes) -> None:
         if not message.startswith(header):
             raise InvalidHeader("Invalid message header")
 

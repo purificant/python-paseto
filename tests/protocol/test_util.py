@@ -1,13 +1,14 @@
 import pytest
+from typing import List, Tuple
 
 from paseto.protocol.util import pae, b64, b64decode, padding_size
 
 
 # test against reference values
 # https://tools.ietf.org/html/draft-paragon-paseto-rfc-00#section-2.2.1
-def test_pae_reference():
+def test_pae_reference() -> None:
 
-    test_cases = [
+    test_cases: List[Tuple[List[bytes], bytes]] = [
         ([], b"\x00\x00\x00\x00\x00\x00\x00\x00"),
         ([b""], b"\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"),
         (
@@ -20,11 +21,11 @@ def test_pae_reference():
         assert pae(test_case[0]) == test_case[1]
 
     with pytest.raises(TypeError) as exception_info:
-        assert pae("test") == ""
+        assert pae("test") == ""  # type: ignore
     assert "Expecting a list" in str(exception_info.value)
 
 
-def test_pae():
+def test_pae() -> None:
 
     test_cases = [
         (
@@ -69,7 +70,7 @@ def test_pae():
 
 
 # test cases from https://tools.ietf.org/html/rfc4648#section-10 without the padding '='
-def test_b64_reference():
+def test_b64_reference() -> None:
 
     test_cases = [
         (b"", b""),
@@ -86,7 +87,7 @@ def test_b64_reference():
         assert b64decode(test_case[1]) == test_case[0]
 
 
-def test_padding_size():
+def test_padding_size() -> None:
 
     test_cases = [
         (0, 0),
