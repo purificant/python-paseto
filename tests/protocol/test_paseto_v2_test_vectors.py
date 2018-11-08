@@ -8,7 +8,7 @@ import os
 class TestPasetoV2TestVectors(object):
     """
     Test vectors https://tools.ietf.org/html/draft-paragon-paseto-rfc-00#appendix-A.2
-    2-E-5 and 2-E-6 use footer from reference implementation instead of rfc specification
+    2-E-5, 2-E-6, 2-S-2 use footer from reference implementation instead of rfc specification
     """
 
     @patch.object(os, "urandom")
@@ -139,15 +139,94 @@ class TestPasetoV2TestVectors(object):
         footer: bytes,
         token_str: str,
     ) -> None:
-        def form(s: str) -> str:
-            return re.sub(r"\s+", "", s)
 
         # transform input from strings that can easily be compared to rfc spec to bytes object
+        form = TestPasetoV2TestVectors.reformat
+
         key: bytes = bytes.fromhex(form(key_str))
         nonce: bytes = bytes.fromhex(form(nonce_str))
         token: bytes = form(token_str).encode()
 
+        # use non random nonce for the purpose of reproducible tests
         mock.return_value = nonce
 
-        token2 = Version2.encrypt(payload, key, footer)
-        assert token == token2, name
+        # verify that encrypt produces expected token
+        assert token == Version2.encrypt(payload, key, footer), name
+
+        # verify that decrypt produces expected payload
+        assert payload == Version2.decrypt(token, key, footer), name
+
+    @staticmethod
+    def reformat(s: str) -> str:
+        # helper to remove whitespace from string
+        return re.sub(r"\s+", "", s)
+
+    @pytest.mark.parametrize(
+        "name,token_str,private_key_str,public_key_str,payload,footer",
+        [
+            (
+                "Test Vector v2-S-1",
+                """
+                v2.public.eyJkYXRhIjoidGhpcyBpcyBhIHNpZ25lZCBtZXNzYWdlIi
+                wiZXhwIjoiMjAxOS0wMS0wMVQwMDowMDowMCswMDowMCJ9HQr8URrGnt
+                Tu7Dz9J2IF23d1M7-9lH9xiqdGyJNvzp4angPW5Esc7C5huy_M8I8_Dj
+                JK2ZXC2SUYuOFM-Q_5Cw
+                """,
+                """
+                b4cbfb43 df4ce210 727d953e 4a713307
+                fa19bb7d 9f850414 38d9e11b 942a3774
+                1eb9dbbb bc047c03 fd70604e 0071f098
+                7e16b28b 757225c1 1f00415d 0e20b1a2
+                """,
+                """
+                1eb9dbbb bc047c03 fd70604e 0071f098
+                7e16b28b 757225c1 1f00415d 0e20b1a2
+                """,
+                b'{"data":"this is a signed message","exp":"2019-01-01T00:00:00+00:00"}',
+                b"",
+            ),
+            (
+                "Test Vector v2-S-2",
+                """
+                v2.public.eyJkYXRhIjoidGhpcyBpcyBhIHNpZ25lZCBtZXNzYWdlIi
+                wiZXhwIjoiMjAxOS0wMS0wMVQwMDowMDowMCswMDowMCJ9flsZsx_gYC
+                R0N_Ec2QxJFFpvQAs7h9HtKwbVK2n1MJ3Rz-hwe8KUqjnd8FAnIJZ601
+                tp7lGkguU63oGbomhoBw.eyJraWQiOiJ6VmhNaVBCUDlmUmYyc25FY1Q
+                3Z0ZUaW9lQTlDT2NOeTlEZmdMMVc2MGhhTiJ9
+                """,
+                """
+                b4cbfb43 df4ce210 727d953e 4a713307
+                fa19bb7d 9f850414 38d9e11b 942a3774
+                1eb9dbbb bc047c03 fd70604e 0071f098
+                7e16b28b 757225c1 1f00415d 0e20b1a2
+                """,
+                """
+                1eb9dbbb bc047c03 fd70604e 0071f098
+                7e16b28b 757225c1 1f00415d 0e20b1a2
+                """,
+                b'{"data":"this is a signed message","exp":"2019-01-01T00:00:00+00:00"}',
+                b'{"kid":"zVhMiPBP9fRf2snEcT7gFTioeA9COcNy9DfgL1W60haN"}',  # footer from reference implementation
+            ),
+        ],
+    )
+    def test_v2_public(
+        self,
+        name,
+        token_str: str,
+        private_key_str: str,
+        public_key_str: str,
+        payload: bytes,
+        footer: bytes,
+    ):
+        # transform input from strings that can easily be compared to rfc spec to bytes object
+        form = TestPasetoV2TestVectors.reformat
+
+        token: bytes = form(token_str).encode()
+        private_key: bytes = bytes.fromhex(form(private_key_str))
+        public_key: bytes = bytes.fromhex(form(public_key_str))
+
+        # verify that sign produces expected token
+        assert token == Version2.sign(payload, private_key, footer), name
+
+        # verify that token contains expected payload
+        assert payload == Version2.verify(token, public_key, footer), name
