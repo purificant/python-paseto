@@ -3,13 +3,7 @@ import hmac
 import hashlib
 from .util import pae, b64, b64decode
 from paseto.exceptions import InvalidHeader, InvalidFooter
-from nacl.bindings import (
-    crypto_aead_xchacha20poly1305_ietf_encrypt,
-    crypto_aead_xchacha20poly1305_ietf_decrypt,
-)
-
-# from nacl.bindings.crypto_sign import crypto_sign, crypto_sign_open
-import pysodium
+from paseto.crypto import primitives
 
 
 class Version2:
@@ -44,9 +38,7 @@ class Version2:
 
         # 5.  Encrypt the message using XChaCha20-Poly1305, using an AEAD
         #        interface such as the one provided in libsodium.
-        cipher_text = crypto_aead_xchacha20poly1305_ietf_encrypt(
-            message, pre_auth, nonce, key
-        )
+        cipher_text = primitives.encrypt(message, pre_auth, nonce, key)
 
         #    6.  If "f" is:
         #
@@ -95,9 +87,7 @@ class Version2:
 
         # 5.  Decrypt "c" using "XChaCha20-Poly1305", store the result in "p".
         # 6.  If decryption failed, throw an exception.  Otherwise, return "p".
-        return crypto_aead_xchacha20poly1305_ietf_decrypt(
-            cipher_text, pre_auth, nonce, key
-        )
+        return primitives.decrypt(cipher_text, pre_auth, nonce, key)
 
     @staticmethod
     def sign(message: bytes, secret_key: bytes, footer: bytes = b"") -> bytes:
@@ -113,7 +103,7 @@ class Version2:
         message2 = pae([header, message, footer])
 
         # 3.  Sign "m2" using Ed25519 "sk".  We'll call this "sig".
-        signature = pysodium.crypto_sign_detached(message2, secret_key)
+        signature = primitives.sign(message2, secret_key)
 
         # 4.  If "f" is:
         #
@@ -161,7 +151,7 @@ class Version2:
 
         # 5.  Use Ed25519 to verify that the signature is valid for the message
         # 6.  If the signature is valid, return "m".  Otherwise, throw an exception.
-        pysodium.crypto_sign_verify_detached(signature, message2, public_key)
+        primitives.verify(signature, message2, public_key)
         return message
 
     @staticmethod
