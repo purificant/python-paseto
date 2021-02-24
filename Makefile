@@ -14,3 +14,10 @@ create-venv:
 # remove all installed packages from active virtual environment
 clean:
 	pip freeze | cut -d ' ' -f1 | xargs --no-run-if-empty pip uninstall -y
+
+# install project dependencies
+install:
+	# use latest pip
+	python -m pip install --upgrade pip
+	# use poetry for dependency management
+	poetry install
