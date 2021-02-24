@@ -29,3 +29,10 @@ test:
 coverage:
 	coverage run -m pytest
 	coverage report --fail-under=100
+
+# lint code
+lint:
+	# format code with black
+	black .
+	# run static type checker
+	mypy paseto tests --ignore-missing-imports
