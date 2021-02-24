@@ -43,3 +43,6 @@ lint:
 	black .
 	# run static type checker
 	mypy paseto tests --ignore-missing-imports
+
+# build and test the entire project
+build: lock install lint test
