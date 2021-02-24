@@ -12,5 +12,5 @@ create-venv:
 	pyenv local ${PROJECT_NAME}
 
 # remove all installed packages from active virtual environment
-clean-venv:
+clean:
 	pip freeze | cut -d ' ' -f1 | xargs --no-run-if-empty pip uninstall -y
