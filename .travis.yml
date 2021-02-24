@@ -11,14 +11,16 @@ sudo: true
 install:
   # needed by pysodium
   - sudo apt-get install libsodium18
-  # recommended way to install poetry
-  - curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
+  # install poetry
+  - make get-poetry
   # activate poetry command
   - source $HOME/.poetry/env
-  - poetry install
+  # install project
+  - make install
 
 script:
-  - coverage run -m pytest
+  - make build
 
 after_success:
+  # publish code coverage statistics
   coveralls
