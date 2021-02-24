@@ -21,3 +21,7 @@ install:
 	python -m pip install --upgrade pip
 	# use poetry for dependency management
 	poetry install
+
+# run tests
+test:
+	pytest
