@@ -22,6 +22,13 @@ install:
 	# use poetry for dependency management
 	poetry install
 
+# export dependencies for external build process
+lock:
+	# ensure lock file is up to date
+	poetry lock
+	# export hashed requirements to simplify external build processes
+	poetry export --format=requirements.txt > requirements.txt
+
 # run tests
 test:
 	pytest
