@@ -10,3 +10,7 @@ create-venv:
 	pyenv virtualenv --force ${PYTHON_VERSION} ${PROJECT_NAME}
 	# automatically activate virtual environment
 	pyenv local ${PROJECT_NAME}
+
+# remove all installed packages from active virtual environment
+clean-venv:
+	pip freeze | cut -d ' ' -f1 | xargs --no-run-if-empty pip uninstall -y
