@@ -17,7 +17,7 @@ black = "^18.9b0"
 pylama = "^7.6"
 tox = "^3.7"
 coverage = "^4.5"
-mypy = "^0.641.0"
+mypy = "^0.812"
 coveralls = "^1.5"
 
 [tool.black]
