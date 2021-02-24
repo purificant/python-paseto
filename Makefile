@@ -46,3 +46,7 @@ lint:
 
 # build and test the entire project
 build: lock install lint test
+
+# install poetry using recommended way
+get-poetry:
+	curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
