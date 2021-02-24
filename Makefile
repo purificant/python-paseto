@@ -25,3 +25,7 @@ install:
 # run tests
 test:
 	pytest
+
+coverage:
+	coverage run -m pytest
+	coverage report --fail-under=100
