@@ -21,10 +21,12 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install poetry
         run: make get-poetry
-      - name: Enable poetry command
-        run: echo "$HOME/.poetry/bin" >> $GITHUB_PATH
+      - name: Configure poetry
+        run: |
+            echo "$HOME/.poetry/bin" >> $GITHUB_PATH # enable poetry command
+            poetry config virtualenvs.create false # disable creating virtual environment
       - name: Install dependencies
-        run: POETRY_VIRTUALENVS_CREATE=false make install
+        run: make install
       - name: Check code formatting
         run: black --check .
       - name: Lint code
