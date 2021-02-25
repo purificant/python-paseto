@@ -1,6 +1,6 @@
 name: ci-workflow
 # run workflow for these events
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch]
 
 jobs:
   # define build job
