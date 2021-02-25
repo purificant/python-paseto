@@ -10,6 +10,11 @@ jobs:
       matrix:
         python-version: ['3.6', '3.7', '3.8', '3.9']
         os: ['ubuntu-20.04', 'macos-10.15', 'windows-2019']
+        include:
+          - os: ['ubuntu-20.04', 'macos-10.15']
+            poetry-path: ['$HOME/.poetry/bin']
+          - os: ['windows-2019']
+            poetry-path: ['%USERPROFILE%\.poetry\bin']
       fail-fast: false
     name: Python ${{ matrix.python-version }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
@@ -22,8 +27,8 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install poetry
         run: make get-poetry
-      - name: Activate poetry command
-        run: echo "$HOME/.poetry/bin" >> $GITHUB_PATH # enable poetry command
+      - name: Enable poetry command
+        run: echo "${{ matrix.poetry-path }}" >> $GITHUB_PATH
       - name: Configure poetry
         run: poetry config virtualenvs.create false # disable creating virtual environment
       - name: Install dependencies
