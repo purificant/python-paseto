@@ -2,6 +2,7 @@
 Platform-Agnostic Security Tokens for Python
 
 [![Build Status](https://travis-ci.org/purificant/python-paseto.svg?branch=master)](https://travis-ci.org/purificant/python-paseto)
+![Workflow Status](https://github.com/purificant/python-paseto/actions/workflows/ci.yaml/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/purificant/python-paseto/badge.svg?branch=master)](https://coveralls.io/github/purificant/python-paseto?branch=master)
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/purificant/python-paseto.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/purificant/python-paseto/context:python)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
