@@ -24,3 +24,8 @@ script:
 after_success:
   # publish code coverage statistics
   coveralls
+
+# exclude these branches from travis
+branches:
+  except:
+  - github_ci # used for integrating github actions
