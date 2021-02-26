@@ -39,6 +39,8 @@ coverage:
 
 # lint code
 lint:
+	# sort import statements
+	isort .
 	# format code with black
 	black .
 	# run static type checker
