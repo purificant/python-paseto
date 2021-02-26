@@ -1,12 +1,13 @@
-class PasetoException(Exception):
-    """ Base exception for all paseto related errors"""
+""" This module contains exceptions. """
 
-    pass
+
+class PasetoException(Exception):
+    """ Base exception for all paseto related errors. """
 
 
 class InvalidFooter(PasetoException):
-    pass
+    """ Footer could not be verified. """
 
 
 class InvalidHeader(PasetoException):
-    pass
+    """ Message contains incorrect header. """
