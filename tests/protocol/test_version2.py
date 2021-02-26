@@ -1,8 +1,9 @@
 import pytest
-from paseto.protocol.version2 import Version2
+from nacl.bindings.crypto_sign import crypto_sign_seed_keypair, crypto_sign_SEEDBYTES
+
 from paseto.exceptions import InvalidFooter, InvalidHeader
 from paseto.protocol.util import b64
-from nacl.bindings.crypto_sign import crypto_sign_seed_keypair, crypto_sign_SEEDBYTES
+from paseto.protocol.version2 import Version2
 
 
 class TestVersion2(object):

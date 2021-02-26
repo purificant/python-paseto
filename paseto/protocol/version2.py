@@ -1,9 +1,11 @@
-import os
-import hmac
 import hashlib
-from .util import pae, b64, b64decode
-from paseto.exceptions import InvalidHeader, InvalidFooter
+import hmac
+import os
+
 from paseto.crypto import primitives
+from paseto.exceptions import InvalidFooter, InvalidHeader
+
+from .util import b64, b64decode, pae
 
 
 class Version2:

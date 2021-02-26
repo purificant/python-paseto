@@ -1,8 +1,10 @@
-import pytest
-import re
-from unittest.mock import patch, MagicMock
-from paseto.protocol.version2 import Version2
 import os
+import re
+from unittest.mock import MagicMock, patch
+
+import pytest
+
+from paseto.protocol.version2 import Version2
 
 
 class TestPasetoV2TestVectors(object):

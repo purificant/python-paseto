@@ -1,7 +1,8 @@
-import pytest
 from typing import List, Tuple
 
-from paseto.protocol.util import pae, b64, b64decode, padding_size
+import pytest
+
+from paseto.protocol.util import b64, b64decode, padding_size, pae
 
 
 # test against reference values

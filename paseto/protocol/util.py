@@ -1,6 +1,6 @@
-from typing import List
+from base64 import urlsafe_b64decode, urlsafe_b64encode
 from struct import pack
-from base64 import urlsafe_b64encode, urlsafe_b64decode
+from typing import List
 
 
 # specification: https://tools.ietf.org/html/draft-paragon-paseto-rfc-00#section-2.2.1
