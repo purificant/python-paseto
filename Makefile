@@ -46,6 +46,12 @@ lint:
 	# run static type checker
 	mypy paseto tests --ignore-missing-imports
 
+check-lint:
+	# check imports
+	isort --check-only .
+	# check code formatting
+	black --check .
+
 # build and test the entire project
 build: lock install lint coverage
 
