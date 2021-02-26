@@ -1,3 +1,9 @@
+"""This module contains official test vectors.
+
+Some tests replicate tests from the reference implementation.
+A comment is provided to indicate that where appropriate.
+"""
+
 import os
 import re
 from unittest.mock import MagicMock, patch
@@ -14,6 +20,7 @@ class TestPasetoV2TestVectors(object):
     """
 
     @patch.object(os, "urandom")
+    # pylint: disable=line-too-long
     @pytest.mark.parametrize(
         "name,key_str,nonce_str,payload,footer,token_str",
         [
@@ -163,6 +170,7 @@ class TestPasetoV2TestVectors(object):
         # helper to remove whitespace from string
         return re.sub(r"\s+", "", s)
 
+    # pylint: disable=line-too-long
     @pytest.mark.parametrize(
         "name,token_str,private_key_str,public_key_str,payload,footer",
         [
