@@ -7,9 +7,9 @@ import pytest
 from paseto.protocol.util import b64, b64decode, padding_size, pae
 
 
-# test against reference values
 # https://tools.ietf.org/html/draft-paragon-paseto-rfc-00#section-2.2.1
 def test_pae_reference() -> None:
+    """ Test PAE() function against reference values. """
 
     test_cases: List[Tuple[List[bytes], bytes]] = [
         ([], b"\x00\x00\x00\x00\x00\x00\x00\x00"),
@@ -29,6 +29,7 @@ def test_pae_reference() -> None:
 
 
 def test_pae() -> None:
+    """ Additional tests for PAE(). """
 
     test_cases = [
         (
@@ -86,6 +87,7 @@ def test_pae_input_type() -> None:
 
 # test cases from https://tools.ietf.org/html/rfc4648#section-10 without the padding '='
 def test_b64_reference() -> None:
+    """ Test b64() with test cases from the base64 RFC. """
 
     test_cases = [
         (b"", b""),
@@ -103,6 +105,7 @@ def test_b64_reference() -> None:
 
 
 def test_padding_size() -> None:
+    """ Test padding size calculations, including impossible values. """
 
     test_cases = [
         (0, 0),
