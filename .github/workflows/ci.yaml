@@ -23,8 +23,8 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements-dev.txt
         shell: bash
-      - name: Check code formatting
-        run: black --check .
+      - name: Check linting
+        run: make check-lint
         shell: bash
       - name: Lint code
         run: make lint
