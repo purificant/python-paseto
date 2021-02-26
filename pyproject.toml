@@ -20,6 +20,7 @@ coverage = "^5.4"
 mypy = "^0.812"
 coveralls = "^3.0"
 isort = "^5.7.0"
+pylint = "^2.7.1"
 
 [tool.black]
 exclude = '/(submodules|.tox)/'
