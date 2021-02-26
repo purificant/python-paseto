@@ -9,7 +9,7 @@ from typing import List
 def pae(pieces: List[bytes]) -> bytes:
     """ Applies Pre-Authentication Encoding (PAE) to input. """
 
-    if not isinstance(pieces, List):
+    if not isinstance(pieces, list):
         raise TypeError("Expecting a list of bytes-like objects")
 
     ret = le64(len(pieces))

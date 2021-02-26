@@ -70,6 +70,18 @@ def test_pae() -> None:
         assert pae(test_case[0]) == test_case[1]
 
 
+def test_pae_input_type() -> None:
+    """ Check that exception is raised for invalid input types. """
+    with pytest.raises(TypeError):
+        pae("")  # type: ignore
+
+    with pytest.raises(TypeError):
+        pae(1)  # type: ignore
+
+    with pytest.raises(TypeError):
+        pae(())  # type: ignore
+
+
 # test cases from https://tools.ietf.org/html/rfc4648#section-10 without the padding '='
 def test_b64_reference() -> None:
 
