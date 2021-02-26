@@ -1,3 +1,5 @@
+""" This module contains unit tests for util module. """
+
 from typing import List, Tuple
 
 import pytest
