@@ -46,6 +46,7 @@ lint:
 	# run static type checker
 	mypy paseto tests --ignore-missing-imports
 
+# check linting without changing source files
 check-lint:
 	# check imports
 	isort --check-only .
