@@ -19,6 +19,7 @@ tox = "^3.22"
 coverage = "^5.4"
 mypy = "^0.812"
 coveralls = "^3.0"
+isort = "^5.7.0"
 
 [tool.black]
 exclude = '/(submodules|.tox)/'
