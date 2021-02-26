@@ -10,5 +10,3 @@ __pycache__
 .tox
 # mypy
 .mypy_cache
-# auto generated for export
-requirements.txt
