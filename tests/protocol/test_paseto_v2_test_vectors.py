@@ -20,7 +20,7 @@ class TestPasetoV2TestVectors:
     """
 
     @patch.object(os, "urandom")
-    # pylint: disable=line-too-long
+    # pylint: disable=line-too-long, too-many-arguments
     @pytest.mark.parametrize(
         "name,key_str,nonce_str,payload,footer,token_str",
         [
@@ -148,6 +148,7 @@ class TestPasetoV2TestVectors:
         footer: bytes,
         token_str: str,
     ) -> None:
+        """ Tests for v2.local (Shared-Key Encryption). """
 
         # transform input from strings that can easily be compared to rfc spec to bytes object
         form = TestPasetoV2TestVectors.reformat
@@ -166,11 +167,11 @@ class TestPasetoV2TestVectors:
         assert payload == Version2.decrypt(token, key, footer), name
 
     @staticmethod
-    def reformat(s: str) -> str:
-        # helper to remove whitespace from string
-        return re.sub(r"\s+", "", s)
+    def reformat(string_with_whitespace: str) -> str:
+        """ Returns input string after removing whitespace. """
+        return re.sub(r"\s+", "", string_with_whitespace)
 
-    # pylint: disable=line-too-long
+    # pylint: disable=line-too-long, too-many-arguments
     @pytest.mark.parametrize(
         "name,token_str,private_key_str,public_key_str,payload,footer",
         [
@@ -228,6 +229,8 @@ class TestPasetoV2TestVectors:
         payload: bytes,
         footer: bytes,
     ):
+        """ Test for v2.public (Public-Key Authentication). """
+
         # transform input from strings that can easily be compared to rfc spec to bytes object
         form = TestPasetoV2TestVectors.reformat
 
