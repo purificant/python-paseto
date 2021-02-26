@@ -45,6 +45,8 @@ lint:
 	black .
 	# run static type checker
 	mypy paseto tests --ignore-missing-imports
+	# run static code analysis
+	pylint paseto tests
 
 # check linting without changing source files
 check-lint:
