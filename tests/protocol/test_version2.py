@@ -8,7 +8,7 @@ from paseto.protocol.util import b64
 from paseto.protocol.version2 import Version2
 
 
-class TestVersion2(object):
+class TestVersion2:
     @pytest.mark.parametrize("footer", [b"", b"baz"])
     def test_encrypt_decrypt(self, footer: bytes) -> None:
         """ Check that decrypt() reverses encrypt(). """
