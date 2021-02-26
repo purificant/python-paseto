@@ -13,7 +13,7 @@ import pytest
 from paseto.protocol.version2 import Version2
 
 
-class TestPasetoV2TestVectors(object):
+class TestPasetoV2TestVectors:
     """
     Test vectors https://tools.ietf.org/html/draft-paragon-paseto-rfc-00#appendix-A.2
     2-E-5, 2-E-6, 2-S-2 use footer from reference implementation instead of rfc specification
