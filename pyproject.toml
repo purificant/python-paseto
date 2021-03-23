@@ -27,6 +27,7 @@ mypy = "^0.812"
 coveralls = "^3.0"
 isort = "^5.7.0"
 pylint = "^2.7.1"
+pytest-benchmark = "^3.2.3"
 
 [tool.black]
 exclude = '/(submodules|.tox)/'
