@@ -31,7 +31,10 @@ lock:
 
 # run tests
 test:
-	pytest
+	pytest --benchmark-disable
+
+benchmark:
+	pytest --benchmark-enable
 
 coverage:
 	coverage run -m pytest
