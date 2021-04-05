@@ -37,7 +37,7 @@ benchmark:
 	pytest --benchmark-enable
 
 coverage:
-	coverage run -m pytest
+	coverage run -m pytest --benchmark-disable
 	coverage report --fail-under=100
 
 # lint code
