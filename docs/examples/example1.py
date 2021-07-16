@@ -7,6 +7,6 @@ token = Version2.encrypt(message, key)
 plain_text = Version2.decrypt(token, key)
 
 assert plain_text == message
-print(f"{token=}")
-print(f"{plain_text=}")
-print(f"{message=}")
+print("token={}".format(token))
+print("plain_text={}".format(plain_text))
+print("message={}".format(message))
