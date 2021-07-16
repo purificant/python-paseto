@@ -36,18 +36,36 @@ Low level API focuses on solid, high quality, production ready primitives
 as specified directly in the [PASETO](https://tools.ietf.org/html/draft-paragon-paseto-rfc-00) 
 protocol.
 
+# Example use
 ```python
 from paseto.protocol.version2 import Version2
 
-key = b"0" * 32
-message = b"foo"
-footer = b"sample_footer"
+message = b"foo" # your data
+key = b"0" * 32  # encryption key
 
-token = Version2.encrypt(message, key, footer)
-plain_text = Version2.decrypt(token, key, footer)
+token = Version2.encrypt(message, key)
+plain_text = Version2.decrypt(token, key)
 
 assert plain_text == message
+print(f"{token=}")
+print(f"{plain_text=}")
+print(f"{message=}")
+```
+### With optional footer
+```python
+from paseto.protocol.version2 import Version2
 
+message = b"foo" # your data
+key = b"0" * 32  # encryption key
+optional_footer = b"sample_footer" # authenticated but not encrypted metadata
+
+token = Version2.encrypt(message, key, optional_footer)
+plain_text = Version2.decrypt(token, key, optional_footer)
+
+assert plain_text == message
+print(f"{token=}")
+print(f"{plain_text=}")
+print(f"{message=}")
 ```
 
 # High level API
