@@ -11,7 +11,7 @@ from .util import b64, b64decode, pae
 
 
 class Version2:
-    """ Version2 implementation of the Paseto protocol. """
+    """Version2 implementation of the Paseto protocol."""
 
     HEADER_LOCAL = b"v2.local."
     HEADER_PUBLIC = b"v2.public."
@@ -19,7 +19,7 @@ class Version2:
 
     @staticmethod
     def encrypt(message: bytes, key: bytes, footer: bytes = b"") -> bytes:
-        """ https://tools.ietf.org/html/draft-paragon-paseto-rfc-00#section-5.3.1 """
+        """https://tools.ietf.org/html/draft-paragon-paseto-rfc-00#section-5.3.1"""
 
         # Given a message "m", key "k", and optional footer "f".
 
@@ -60,7 +60,7 @@ class Version2:
 
     @staticmethod
     def decrypt(message: bytes, key: bytes, footer: bytes = b""):
-        """ https://tools.ietf.org/html/draft-paragon-paseto-rfc-00#section-5.3.2 """
+        """https://tools.ietf.org/html/draft-paragon-paseto-rfc-00#section-5.3.2"""
 
         # Given a message "m", key "k", and optional footer "f".
 
@@ -96,7 +96,7 @@ class Version2:
 
     @staticmethod
     def sign(message: bytes, secret_key: bytes, footer: bytes = b"") -> bytes:
-        """ https://tools.ietf.org/html/draft-paragon-paseto-rfc-00#section-5.3.3 """
+        """https://tools.ietf.org/html/draft-paragon-paseto-rfc-00#section-5.3.3"""
 
         # Given a message "m", Ed25519 secret key "sk", and optional footer "f"
         #    (which defaults to empty string):
@@ -125,7 +125,7 @@ class Version2:
 
     @staticmethod
     def verify(signed_message: bytes, public_key: bytes, footer: bytes = b"") -> bytes:
-        """ https://tools.ietf.org/html/draft-paragon-paseto-rfc-00#section-5.3.4 """
+        """https://tools.ietf.org/html/draft-paragon-paseto-rfc-00#section-5.3.4"""
 
         # Given a signed message "sm", public key "pk", and optional footer "f"
         #    (which defaults to empty string):
@@ -161,26 +161,26 @@ class Version2:
 
     @staticmethod
     def get_nonce(message: bytes, random_bytes: bytes) -> bytes:
-        """ Return nonce per Version2 specification. """
+        """Return nonce per Version2 specification."""
         return hashlib.blake2b(
             message, key=random_bytes, digest_size=Version2.NONCE_SIZE
         ).digest()
 
     @staticmethod
     def check_footer(message: bytes, footer: bytes) -> None:
-        """ Check that message contains a valid footer. """
+        """Check that message contains a valid footer."""
         if footer and not hmac.compare_digest(b64(footer), message.split(b".")[-1]):
             raise InvalidFooter("Invalid message footer")
 
     @staticmethod
     def check_header(message: bytes, header: bytes) -> None:
-        """ Check that message begins with a valid header. """
+        """Check that message begins with a valid header."""
         if not message.startswith(header):
             raise InvalidHeader("Invalid message header")
 
     @staticmethod
     def decode_message(message: bytes, header_length: int) -> bytes:
-        """ Returns message decoded into raw binary. """
+        """Returns message decoded into raw binary."""
         return b64decode(
             # strip header and remove any footer
             message[header_length:].split(b".")[0]

@@ -2,12 +2,12 @@
 
 
 class PasetoException(Exception):
-    """ Base exception for all paseto related errors. """
+    """Base exception for all paseto related errors."""
 
 
 class InvalidFooter(PasetoException):
-    """ Footer could not be verified. """
+    """Footer could not be verified."""
 
 
 class InvalidHeader(PasetoException):
-    """ Message contains incorrect header. """
+    """Message contains incorrect header."""

@@ -7,7 +7,7 @@ from typing import List
 
 # specification: https://tools.ietf.org/html/draft-paragon-paseto-rfc-00#section-2.2.1
 def pae(pieces: List[bytes]) -> bytes:
-    """ Applies Pre-Authentication Encoding (PAE) to input. """
+    """Applies Pre-Authentication Encoding (PAE) to input."""
 
     if not isinstance(pieces, list):
         raise TypeError("Expecting a list of bytes-like objects")
@@ -20,7 +20,7 @@ def pae(pieces: List[bytes]) -> bytes:
 
 
 def le64(num: int) -> bytes:
-    """ Encodes a 64-bit unsigned integer into a little-endian binary string. """
+    """Encodes a 64-bit unsigned integer into a little-endian binary string."""
     return pack("<Q", num)
 
 
@@ -35,12 +35,12 @@ def b64(input_bytes: bytes) -> bytes:
 
 
 def b64decode(input_bytes: bytes) -> bytes:
-    """ Returns base64 decoding by reversing b64(). """
+    """Returns base64 decoding by reversing b64()."""
     return urlsafe_b64decode(input_bytes + b"=" * padding_size(len(input_bytes)))
 
 
 def padding_size(num: int) -> int:
-    """ Calculates base64 padding size as per RFC4648. """
+    """Calculates base64 padding size as per RFC4648."""
     # according to https://tools.ietf.org/html/rfc4648#section-4
     # only three cases can exist
     mapping = {

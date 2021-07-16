@@ -144,7 +144,7 @@ def test_v2_local(
     footer: bytes,
     token_str: str,
 ):
-    """ Tests for v2.local (Shared-Key Encryption). """
+    """Tests for v2.local (Shared-Key Encryption)."""
 
     # transform input from strings that can easily be compared to rfc spec to bytes object
     form = reformat
@@ -164,7 +164,7 @@ def test_v2_local(
 
 
 def reformat(string_with_whitespace: str) -> str:
-    """ Returns input string after removing whitespace. """
+    """Returns input string after removing whitespace."""
     return re.sub(r"\s+", "", string_with_whitespace)
 
 
@@ -225,7 +225,7 @@ def test_v2_public(
     payload: bytes,
     footer: bytes,
 ):
-    """ Test for v2.public (Public-Key Authentication). """
+    """Test for v2.public (Public-Key Authentication)."""
 
     # transform input from strings that can easily be compared to rfc spec to bytes object
     form = reformat
