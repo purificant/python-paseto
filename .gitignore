@@ -10,3 +10,5 @@ __pycache__
 .tox
 # mypy
 .mypy_cache
+# poetry build artifacts
+dist
