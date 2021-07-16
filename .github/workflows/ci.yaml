@@ -1,11 +1,14 @@
 name: ci-workflow
 # run workflow for these events
-on: [push, pull_request, workflow_dispatch]
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 0' # weekly
 
 jobs:
-  # define build job
   build:
-    # type of machine
     strategy:
       matrix:
         python-version: ['3.6', '3.7', '3.8', '3.9']
