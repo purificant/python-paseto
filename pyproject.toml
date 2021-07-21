@@ -19,14 +19,14 @@ cython = "^0.29.24"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"
-black = "^21.6b0"
+black = "^21.7b0"
 pylama = "^7.7.1"
 tox = "^3.24.0"
 coverage = "^5.5"
 mypy = "^0.910"
-coveralls = "^3.1.0"
+coveralls = "^3.2.0"
 isort = "^5.9.2"
-pylint = "^2.9.3"
+pylint = "^2.9.5"
 pytest-benchmark = "^3.4.1"
 
 [tool.black]
