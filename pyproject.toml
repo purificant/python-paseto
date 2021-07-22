@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "python-paseto"
-version = "0.1.0"
+version = "0.2.0"
 description = "Platform-Agnostic Security Tokens for Python"
 authors = []
 license = "MIT"
@@ -10,6 +10,14 @@ homepage = "https://github.com/purificant/python-paseto"
 repository = "https://github.com/purificant/python-paseto"
 documentation = "https://github.com/purificant/python-paseto"
 keywords = ["paseto", "token", "security", "crypto"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Security",
+    "Topic :: Security :: Cryptography",
+    "Development Status :: 5 - Production/Stable",
+]
 
 [tool.poetry.dependencies]
 python = ">=3.6.2,<3.10"
