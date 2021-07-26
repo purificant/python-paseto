@@ -26,7 +26,7 @@ install:
 lock:
 	# ensure lock file is up to date
 	poetry lock
-	# export hashed requirements to simplify external build processes
+	# export requirements to simplify external build processes
 	poetry export --dev --without-hashes --output requirements-dev.txt
 
 # run tests
