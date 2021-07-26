@@ -25,19 +25,14 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: pip install -r requirements-dev.txt
-        shell: bash
       - name: Check linting
         run: make check-lint
-        shell: bash
       - name: Lint code
         run: make lint
-        shell: bash
       - name: Run tests with code coverage
         run: make coverage
-        shell: bash
       - name: Upload coverage data to coveralls.io
         run: coveralls --service=github
-        shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COVERALLS_FLAG_NAME: ${{ matrix.python-version }} on ${{ matrix.os }}
