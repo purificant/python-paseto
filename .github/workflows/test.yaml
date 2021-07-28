@@ -48,7 +48,7 @@ jobs:
 
   coveralls:
     name: Indicate completion to coveralls.io when all parallel jobs finished
-    needs: build
+    needs: test
     runs-on: ubuntu-latest
     container: python:3-slim
     steps:
