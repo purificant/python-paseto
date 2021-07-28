@@ -40,23 +40,32 @@ coverage:
 	coverage run -m pytest --benchmark-disable
 	coverage report --fail-under=100
 
-# lint code
-lint:
+# lint code in local development
+lint: format-code code-analysis
+
+# check code linting during continious integration
+ci-lint: check-code-formatting code-analysis
+
+# analyse and re-format code
+format-code:
 	# sort import statements
 	isort .
 	# format code with black
 	black .
-	# run static type checker
-	mypy paseto tests --ignore-missing-imports
-	# run static code analysis
-	pylint paseto tests
 
-# check linting without changing source files
-check-lint:
+# check code formatting without any changes
+check-code-formatting:
 	# check imports
 	isort --check-only .
 	# check code formatting
 	black --check .
+
+# static code analysis
+code-analysis:
+	# run static type checker
+	mypy paseto tests --ignore-missing-imports
+	# run static code analysis
+	pylint paseto tests
 
 # build and test the entire project
 build: lock install lint coverage
