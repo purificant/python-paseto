@@ -1,36 +1,44 @@
-name: ci-workflow
-# run workflow for these events
+name: test-workflow
 on:
+  # when any branch in the repository is pushed
   push:
+  # when a pull request is created
   pull_request:
+  # when manually triggered to run
   workflow_dispatch:
+  # when scheduled
   schedule:
     - cron: '0 0 * * 0' # weekly
 
 jobs:
-  build:
+  # run tests
+  test:
     strategy:
       matrix:
         python-version: ['3.6', '3.7', '3.8', '3.9']
         os: ['ubuntu-20.04', 'macos-10.15', 'windows-2019']
+      # do not cancel any jobs when a single job fails
       fail-fast: false
     name: Python ${{ matrix.python-version }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
       - name: Setup python
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
+
       - name: Install dependencies
-        run: pip install -r requirements-dev.txt
-      - name: Check linting
-        run: make check-lint
-      - name: Lint code
-        run: make lint
+        run: pip install --requirement requirements-dev.txt
+
+      - name: Run code linting checks
+        run: make ci-lint
+
       - name: Run tests with code coverage
         run: make coverage
+
       - name: Upload coverage data to coveralls.io
         run: coveralls --service=github
         env:
@@ -39,7 +47,7 @@ jobs:
           COVERALLS_PARALLEL: true
 
   coveralls:
-    name: Indicate completion to coveralls.io
+    name: Indicate completion to coveralls.io when all parallel jobs finished
     needs: build
     runs-on: ubuntu-latest
     container: python:3-slim
