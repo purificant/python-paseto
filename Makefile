@@ -33,9 +33,11 @@ lock:
 test:
 	pytest --benchmark-disable
 
+# run benchmark tests to compare performance between alternative implementations
 benchmark:
 	pytest --benchmark-enable
 
+# check code coverage
 coverage:
 	coverage run -m pytest --benchmark-disable
 	coverage report --fail-under=100
@@ -43,7 +45,7 @@ coverage:
 # lint code in local development
 lint: format-code code-analysis
 
-# check code linting during continious integration
+# check code linting during continuous integration
 ci-lint: check-code-formatting code-analysis
 
 # analyse and re-format code
@@ -70,6 +72,10 @@ code-analysis:
 # build and test the entire project
 build: lock install lint coverage
 
+check-spelling:
+	codespell
+
 # install poetry using recommended way
 get-poetry:
 	curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python -
+
