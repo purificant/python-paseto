@@ -16,7 +16,8 @@ pip install python-paseto
 ```
 
 # Low level API
-Implements PASETO V2 encrypt / decrypt functions.
+Implements PASETO V2 encrypt / decrypt / sign / verify functions,
+supports both `v2.local` and `v2.public` messages.
 Low level API is focuses on solid, high quality, production ready primitives
 as specified directly in the [PASETO](https://tools.ietf.org/html/draft-paragon-paseto-rfc-00) 
 protocol.
@@ -58,7 +59,7 @@ In the future a high level API will provide developer friendly access to low lev
 and support easy integration into other projects.
 
 # Development
-Typical dev workflow operations are automated in [Makefile](Makefile),
+Typical dev workflow operations are automated in [Makefile](https://github.com/purificant/python-paseto/blob/main/Makefile),
 including testing, linting, code quality checks, benchmarks and dev environment setup.
 
 # Contributing
