@@ -1,6 +1,6 @@
 [submodule "submodules/libsodium"]
 	path = submodules/libsodium
 	url = https://github.com/jedisct1/libsodium
-[submodule "submodules/paseto-test-vectors"]
-	path = submodules/paseto-test-vectors
-	url = git@github.com:purificant/paseto-test-vectors.git
+[submodule "submodules/paseto-spec"]
+	path = submodules/paseto-spec
+	url = https://github.com/paseto-standard/paseto-spec

@@ -1,4 +1,9 @@
-"""This module contains official test vectors.
+"""This module contains official RFC test vectors.
+
+These test vectors are based on the origin RFC spec. They are still valid and continue to work.
+
+Another test module was created for updated and expanded test vectors based on the latest
+spec: https://github.com/paseto-standard/paseto-spec
 
 Some tests replicate tests from the reference implementation.
 A comment is provided to indicate that where appropriate.

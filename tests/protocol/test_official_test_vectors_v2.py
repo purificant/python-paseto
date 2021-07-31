@@ -1,9 +1,10 @@
 """
 This module contains tests for official test vectors updated in preparation for PASETO v3 and v4.
 
-Test vectors are available in https://github.com/purificant/paseto-test-vectors
-Documentation is here: https://github.com/paragonie/paseto/tree/master/docs/03-Implementation-Guide
+Test vectors are available here:
+https://github.com/paseto-standard/paseto-spec/tree/master/docs/02-Implementation-Guide/Test-Vectors
 
+Documentation is here: https://github.com/paseto-standard/paseto-spec
 """
 
 import json
@@ -71,6 +72,8 @@ def transform_test_case_for_v2_public(test_case: dict) -> tuple:
     Transform and return test cases 2-S-1 .. 2-S-3,
     from decoded json dictionary to a tuple of expected data types.
     """
+    # convert strings to bytes
+    # remove extra whitespace from default json encoding in python
     return (
         test_case["name"],
         bytes.fromhex(test_case["public-key"]),
@@ -81,6 +84,7 @@ def transform_test_case_for_v2_public(test_case: dict) -> tuple:
     )
 
 
+# use a test nonce for reproducible tests
 @patch.object(os, "urandom")
 # pylint: disable=too-many-arguments
 @pytest.mark.parametrize(
@@ -127,7 +131,7 @@ def test_v2_public(
     payload: bytes,
     footer: bytes,
 ):
-    """Test for v2.public (Public-Key Authentication)."""
+    """Tests for v2.public (Public-Key Authentication)."""
 
     # verify that sign produces expected token
     assert token == Version2.sign(payload, secret_key, footer), name
