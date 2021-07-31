@@ -21,6 +21,7 @@ supports both `v2.local` and `v2.public` messages.
 Low level API is focuses on solid, high quality, production ready primitives
 as specified directly in the [PASETO](https://tools.ietf.org/html/draft-paragon-paseto-rfc-00) 
 protocol.
+See [paseto-spec](https://github.com/paseto-standard/paseto-spec) for protocol details.
 
 # Example use
 ```python
