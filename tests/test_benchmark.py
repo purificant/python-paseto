@@ -1,4 +1,5 @@
 """ This module contains benchmark tests intended to guide development of a performant codebase. """
+import pytest
 
 from paseto.protocol.version2 import Version2
 
@@ -7,6 +8,7 @@ MESSAGE = b"foo"
 FOOTER = b"sample_footer"
 
 
+@pytest.mark.benchmark(group="encrypt")
 def test_encrypt(benchmark):
     """Benchmark only encryption."""
     token = benchmark(Version2.encrypt, MESSAGE, KEY, FOOTER)
@@ -14,6 +16,7 @@ def test_encrypt(benchmark):
     assert plain_text == MESSAGE
 
 
+@pytest.mark.benchmark(group="decrypt")
 def test_decrypt(benchmark):
     """Benchmark only decryption."""
     token = Version2.encrypt(MESSAGE, KEY, FOOTER)
@@ -21,6 +24,7 @@ def test_decrypt(benchmark):
     assert plain_text == MESSAGE
 
 
+@pytest.mark.benchmark(group="encrypt_and_decrypt")
 def test_encrypt_and_decrypt(benchmark):
     """Benchmark encryption and decryption run together."""
 
