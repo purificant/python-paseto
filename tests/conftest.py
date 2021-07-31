@@ -23,9 +23,6 @@ def get_test_vector_path(version: str) -> str:
     return os.path.join(
         os.path.dirname(os.path.dirname(__file__)),
         "submodules",
-        "paseto-spec",
-        "docs",
-        "02-Implementation-Guide",
-        "Test-Vectors",
+        "test-vectors",
         f"{version}.json",
     )
