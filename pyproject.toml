@@ -21,9 +21,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = ">=3.6.2,<3.10"
-pynacl = "^1.4.0"
 pysodium = "^0.7.9"
-cython = "^0.29.24"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"
@@ -37,6 +35,8 @@ isort = "^5.9.2"
 pylint = "^2.9.5"
 pytest-benchmark = "^3.4.1"
 codespell = "^2.1.0"
+cython = "^0.29.24"
+pynacl = "^1.4.0"
 
 [tool.black]
 exclude = '/(submodules|.tox)/'
