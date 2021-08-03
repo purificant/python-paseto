@@ -15,6 +15,12 @@ Platform-Agnostic Security Tokens for Python
 pip install python-paseto
 ```
 
+### Check installation
+```python
+python -m paseto
+```
+`libsodium` is required, this will check if it is installed on your system. On Ubuntu 20.04 you can get it with `sudo apt install libsodium23`.
+
 # Low level API
 Implements PASETO V2 encrypt / decrypt / sign / verify functions,
 supports both `v2.local` and `v2.public` messages.
