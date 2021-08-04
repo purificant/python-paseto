@@ -7,6 +7,15 @@ import pytest
 
 
 @pytest.fixture
+def get_all_test_vectors() -> dict:
+    """Return all used test vectors."""
+    return {
+        "v2": get_test_vector("v2"),
+        "v4": get_test_vector("v4"),
+    }
+
+
+@pytest.fixture
 def get_test_vectors_v2() -> dict:
     """Return spec for v2 test vectors."""
     return get_test_vector("v2")
