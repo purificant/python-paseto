@@ -31,13 +31,13 @@ See [paseto-spec](https://github.com/paseto-standard/paseto-spec) for protocol d
 
 # Example use
 ```python
-from paseto.protocol.version2 import Version2
+from paseto.protocol.version2 import encrypt, decrypt
 
-message = b"foo" # your data
+message = b"foo"  # your data
 key = b"0" * 32  # encryption key
 
-token = Version2.encrypt(message, key)
-plain_text = Version2.decrypt(token, key)
+token = encrypt(message, key)
+plain_text = decrypt(token, key)
 
 assert plain_text == message
 print(f"token={token}")
@@ -46,14 +46,14 @@ print(f"message={message}")
 ```
 ### With optional footer
 ```python
-from paseto.protocol.version2 import Version2
+from paseto.protocol.version2 import encrypt, decrypt
 
-message = b"foo" # your data
+message = b"foo"  # your data
 key = b"0" * 32  # encryption key
-optional_footer = b"sample_footer" # authenticated but not encrypted metadata
+optional_footer = b"sample_footer"  # authenticated but not encrypted metadata
 
-token = Version2.encrypt(message, key, optional_footer)
-plain_text = Version2.decrypt(token, key, optional_footer)
+token = encrypt(message, key, optional_footer)
+plain_text = decrypt(token, key, optional_footer)
 
 assert plain_text == message
 print(f"token={token}")

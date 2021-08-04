@@ -1,10 +1,10 @@
-from paseto.protocol.version2 import Version2
+from paseto.protocol.version2 import decrypt, encrypt
 
 message = b"foo"  # your data
 key = b"0" * 32  # encryption key
 
-token = Version2.encrypt(message, key)
-plain_text = Version2.decrypt(token, key)
+token = encrypt(message, key)
+plain_text = decrypt(token, key)
 
 assert plain_text == message
 print(f"token={token}")
