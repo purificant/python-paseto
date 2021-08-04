@@ -1,7 +1,7 @@
 """ This module contains tests for version2 protocol implementation. """
 
 import pytest
-from nacl.bindings.crypto_sign import crypto_sign_seed_keypair, crypto_sign_SEEDBYTES
+from pysodium import crypto_sign_seed_keypair, crypto_sign_SEEDBYTES
 
 from paseto.exceptions import InvalidFooter, InvalidHeader
 from paseto.protocol import version2
