@@ -18,7 +18,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from paseto.protocol.version2 import Version2
+from paseto.protocol import version2
 
 
 @patch.object(os, "urandom")
@@ -162,10 +162,10 @@ def test_v2_local(
     mock.return_value = nonce
 
     # verify that encrypt produces expected token
-    assert token == Version2.encrypt(payload, key, footer), name
+    assert token == version2.encrypt(payload, key, footer), name
 
     # verify that decrypt produces expected payload
-    assert payload == Version2.decrypt(token, key, footer), name
+    assert payload == version2.decrypt(token, key, footer), name
 
 
 def reformat(string_with_whitespace: str) -> str:
@@ -240,7 +240,7 @@ def test_v2_public(
     public_key: bytes = bytes.fromhex(form(public_key_str))
 
     # verify that sign produces expected token
-    assert token == Version2.sign(payload, private_key, footer), name
+    assert token == version2.sign(payload, private_key, footer), name
 
     # verify that token contains expected payload
-    assert payload == Version2.verify(token, public_key, footer), name
+    assert payload == version2.verify(token, public_key, footer), name
