@@ -2,7 +2,7 @@
 This module contains tests for official test vectors updated in preparation for PASETO v3 and v4.
 
 Test vectors are available here:
-https://github.com/paseto-standard/paseto-spec/tree/master/docs/02-Implementation-Guide/Test-Vectors
+https://github.com/paseto-standard/test-vectors
 
 Documentation is here: https://github.com/paseto-standard/paseto-spec
 """
@@ -15,30 +15,6 @@ import pytest
 
 from paseto.protocol import version2
 from tests.conftest import get_test_vector
-
-
-def test_expected_number_of_test_vectors(get_test_vectors_v2):
-    """Test that official test vector specification matches expectations."""
-    # total test vectors
-    assert len(get_test_vectors_v2["tests"]) == 12
-    # '2-E-1' to '2-E-9'
-    assert (
-        sum(
-            1
-            for test_case in get_test_vectors_v2["tests"]
-            if test_case["name"].startswith("2-E-")
-        )
-        == 9
-    )
-    # '2-S-1' to '2-S-3'
-    assert (
-        sum(
-            1
-            for test_case in get_test_vectors_v2["tests"]
-            if test_case["name"].startswith("2-S-")
-        )
-        == 3
-    )
 
 
 def get_test_cases(name: str):
