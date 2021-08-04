@@ -1,5 +1,5 @@
 """ This module contains benchmark tests intended to guide development of a performant codebase. """
-import nacl
+import nacl.bindings
 import pysodium
 import pytest
 
