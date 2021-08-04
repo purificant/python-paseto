@@ -1,13 +1,12 @@
 """ This module contains Version2 implementation of the Paseto protocol. """
 
 import hashlib
-import hmac
 import os
 
 from paseto.crypto import primitives
-from paseto.exceptions import InvalidFooter, InvalidHeader
+from paseto.protocol.common import check_footer, check_header, decode_message
 
-from .util import b64, b64decode, pae
+from .util import b64, pae
 
 HEADER_LOCAL = b"v2.local."
 HEADER_PUBLIC = b"v2.public."
@@ -157,26 +156,6 @@ def verify(signed_message: bytes, public_key: bytes, footer: bytes = b"") -> byt
 def get_nonce(message: bytes, random_bytes: bytes) -> bytes:
     """Return nonce per Version2 specification."""
     return hashlib.blake2b(message, key=random_bytes, digest_size=NONCE_SIZE).digest()
-
-
-def check_footer(message: bytes, footer: bytes) -> None:
-    """Check that message contains a valid footer."""
-    if footer and not hmac.compare_digest(b64(footer), message.split(b".")[-1]):
-        raise InvalidFooter("Invalid message footer")
-
-
-def check_header(message: bytes, header: bytes) -> None:
-    """Check that message begins with a valid header."""
-    if not message.startswith(header):
-        raise InvalidHeader("Invalid message header")
-
-
-def decode_message(message: bytes, header_length: int) -> bytes:
-    """Returns message decoded into raw binary."""
-    return b64decode(
-        # strip header and remove any footer
-        message[header_length:].split(b".")[0]
-    )
 
 
 # backwards compatibility, do not use this class

@@ -5,7 +5,6 @@ from nacl.bindings.crypto_sign import crypto_sign_seed_keypair, crypto_sign_SEED
 
 from paseto.exceptions import InvalidFooter, InvalidHeader
 from paseto.protocol import version2
-from paseto.protocol.util import b64
 
 
 @pytest.mark.parametrize("footer", [b"", b"baz"])
@@ -48,41 +47,3 @@ def test_decrypt_invalid_header():
     """Check that exception is raised when header is not valid."""
     with pytest.raises(InvalidHeader):
         version2.decrypt(b"some_incorrect_header.message.footer", b"a key")
-
-
-def test_verify_footer_success():
-    """Check footer validation."""
-    version2.check_footer(b"message." + b64(b"footer"), b"footer")
-
-
-def test_verify_footer_exception():
-    """Check that exception is raised when footer is not valid during footer validation."""
-    with pytest.raises(InvalidFooter):
-        version2.check_footer(b"some message", b"some footer")
-
-
-def test_verify_header_success():
-    """Check header verification."""
-    version2.check_header(b"header.message.footer", b"header")
-
-
-def test_verify_header_exception():
-    """Check that exception is raised when header is not valid during header validation."""
-    with pytest.raises(InvalidHeader):
-        version2.check_header(b"some_header.message.footer", b"other_header")
-
-
-@pytest.mark.parametrize(
-    "message, header, expected",
-    [
-        (b"header." + b64(b"message") + b".footer", b"header.", b"message"),
-        (
-            b"other_header." + b64(b"some_message"),
-            b"other_header.",
-            b"some_message",
-        ),
-    ],
-)
-def test_decode_message(message: bytes, header: bytes, expected: bytes):
-    """Check message decoding."""
-    assert version2.decode_message(message, len(header)) == expected
