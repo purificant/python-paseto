@@ -21,11 +21,8 @@ def test_encrypt_decrypt(footer: bytes) -> None:
 @pytest.mark.parametrize("footer", [b"", b"some_footer"])
 def test_sign_verify(footer: bytes) -> None:
     """Check that verify() reverses sign()."""
-    keys = crypto_sign_seed_keypair(b"\x00" * crypto_sign_SEEDBYTES)
-
+    public_key, secret_key = crypto_sign_seed_keypair(b"\x00" * crypto_sign_SEEDBYTES)
     message = b"foo"
-    public_key = keys[0]
-    secret_key = keys[1]
 
     signed = version2.sign(message, secret_key, footer)
     assert version2.verify(signed, public_key, footer) == message
