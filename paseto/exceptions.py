@@ -11,3 +11,11 @@ class InvalidFooter(PasetoException):
 
 class InvalidHeader(PasetoException):
     """Message contains incorrect header."""
+
+
+class InvalidMac(PasetoException):
+    """Invalid MAC for given ciphertext in decrypt."""
+
+
+class InvalidKey(PasetoException):
+    """Invalid key for this version of the protocol and method."""
