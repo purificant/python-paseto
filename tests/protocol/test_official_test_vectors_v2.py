@@ -7,7 +7,6 @@ https://github.com/paseto-standard/test-vectors
 Documentation is here: https://github.com/paseto-standard/paseto-spec
 """
 
-import json
 import os
 from typing import List
 from unittest.mock import MagicMock, patch
@@ -16,6 +15,10 @@ import pytest
 
 from paseto.protocol import version2
 from tests.conftest import get_test_vector
+from tests.util import (
+    transform_test_case_for_v2_local,
+    transform_test_case_for_v2_public,
+)
 
 
 def get_test_cases(name: str) -> List[dict]:
@@ -25,40 +28,6 @@ def get_test_cases(name: str) -> List[dict]:
         for test_case in get_test_vector("v2")["tests"]
         if test_case["name"].startswith(name)
     ]
-
-
-def transform_test_case_for_v2_local(test_case: dict) -> tuple:
-    """
-    Transform and return test cases 2-E-1 .. 2-E-9,
-    from decoded json dictionary to a tuple of expected data types.
-    """
-    # convert strings to bytes
-    # remove extra whitespace from default json encoding in python
-    return (
-        test_case["name"],
-        bytes.fromhex(test_case["nonce"]),
-        bytes.fromhex(test_case["key"]),
-        test_case["token"].encode(),
-        json.dumps(test_case["payload"], separators=(",", ":")).encode(),
-        test_case["footer"].encode(),
-    )
-
-
-def transform_test_case_for_v2_public(test_case: dict) -> tuple:
-    """
-    Transform and return test cases 2-S-1 .. 2-S-3,
-    from decoded json dictionary to a tuple of expected data types.
-    """
-    # convert strings to bytes
-    # remove extra whitespace from default json encoding in python
-    return (
-        test_case["name"],
-        bytes.fromhex(test_case["public-key"]),
-        bytes.fromhex(test_case["secret-key"]),
-        test_case["token"].encode(),
-        json.dumps(test_case["payload"], separators=(",", ":")).encode(),
-        test_case["footer"].encode(),
-    )
 
 
 # use a test nonce for reproducible tests
