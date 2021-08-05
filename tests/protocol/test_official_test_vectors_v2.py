@@ -9,6 +9,7 @@ Documentation is here: https://github.com/paseto-standard/paseto-spec
 
 import json
 import os
+from typing import List
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -17,7 +18,7 @@ from paseto.protocol import version2
 from tests.conftest import get_test_vector
 
 
-def get_test_cases(name: str) -> list[dict]:
+def get_test_cases(name: str) -> List[dict]:
     """Return test cases filtered by name."""
     return [
         test_case
