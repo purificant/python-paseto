@@ -148,7 +148,7 @@ def test_v2_local(
     payload: bytes,
     footer: bytes,
     token_str: str,
-):
+) -> None:
     """Tests for v2.local (Shared-Key Encryption)."""
 
     # transform input from strings that can easily be compared to rfc spec to bytes object
@@ -223,13 +223,13 @@ def reformat(string_with_whitespace: str) -> str:
     ],
 )
 def test_v2_public(
-    name,
+    name: str,
     token_str: str,
     private_key_str: str,
     public_key_str: str,
     payload: bytes,
     footer: bytes,
-):
+) -> None:
     """Test for v2.public (Public-Key Authentication)."""
 
     # transform input from strings that can easily be compared to rfc spec to bytes object

@@ -54,7 +54,7 @@ def encrypt(message: bytes, key: bytes, footer: bytes = b"") -> bytes:
     return ret
 
 
-def decrypt(message: bytes, key: bytes, footer: bytes = b""):
+def decrypt(message: bytes, key: bytes, footer: bytes = b"") -> bytes:
     """https://tools.ietf.org/html/draft-paragon-paseto-rfc-00#section-5.3.2"""
 
     # Given a message "m", key "k", and optional footer "f".

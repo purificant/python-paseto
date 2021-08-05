@@ -17,7 +17,7 @@ from paseto.protocol import version2
 from tests.conftest import get_test_vector
 
 
-def get_test_cases(name: str):
+def get_test_cases(name: str) -> list[dict]:
     """Return test cases filtered by name."""
     return [
         test_case
@@ -78,7 +78,7 @@ def test_v2_local(
     token: bytes,
     payload: bytes,
     footer: bytes,
-):
+) -> None:
     """Tests for v2.local (Shared-Key Encryption)."""
 
     # use non random nonce for reproducible tests
@@ -106,7 +106,7 @@ def test_v2_public(
     token: bytes,
     payload: bytes,
     footer: bytes,
-):
+) -> None:
     """Tests for v2.public (Public-Key Authentication)."""
 
     # verify that sign produces expected token

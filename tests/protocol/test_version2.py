@@ -28,19 +28,19 @@ def test_sign_verify(footer: bytes) -> None:
     assert version2.verify(signed, public_key, footer) == message
 
 
-def test_get_nonce():
+def test_get_nonce() -> None:
     """Check that nonce can be retrieved."""
     nonce = version2.get_nonce(b"", b"")
     assert len(nonce) == version2.NONCE_SIZE
 
 
-def test_decrypt_invalid_footer():
+def test_decrypt_invalid_footer() -> None:
     """Check that exception is raised when footer is not valid during decrypt()."""
     with pytest.raises(InvalidFooter):
         version2.decrypt(b"header.message.footer", b"a key", b"some_other_footer")
 
 
-def test_decrypt_invalid_header():
+def test_decrypt_invalid_header() -> None:
     """Check that exception is raised when header is not valid."""
     with pytest.raises(InvalidHeader):
         version2.decrypt(b"some_incorrect_header.message.footer", b"a key")
