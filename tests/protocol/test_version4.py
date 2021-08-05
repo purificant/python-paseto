@@ -37,8 +37,15 @@ def test_decrypt_invalid_mac() -> None:
     key: bytes = _create_symmetric_key(4, b"0" * 32)
 
     token: bytes = version4.encrypt(message, key)
+
     # tamper with mac
-    token_with_invalid_mac = token[:40] + b"0" + token[41:]
+    a_slice = token[40:45]
+    if a_slice == b"00000":
+        a_slice = b"11111"
+    else:
+        a_slice = b"00000"
+    token_with_invalid_mac = token[:40] + a_slice + token[45:]
+
     with pytest.raises(InvalidMac):
         version4.decrypt(token_with_invalid_mac, key)
 
