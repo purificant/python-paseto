@@ -22,14 +22,15 @@ python -m paseto
 `libsodium` is required, this will check if it is installed on your system. On Ubuntu 20.04 you can get it with `sudo apt install libsodium23`.
 
 # Low level API
-Implements PASETO V2 encrypt / decrypt / sign / verify functions,
-supports both `v2.local` and `v2.public` messages.
+Implements PASETO Version2 and Version4 protocols supporting `v2.public`, `v2.local`, `v4.public` and `v4.local` messages.
+Every protocol version provides access to encrypt() / decrypt() and sign() / verify() functions.
+
 Low level API is focuses on solid, high quality, production ready primitives
 as specified directly in the [PASETO](https://tools.ietf.org/html/draft-paragon-paseto-rfc-00) 
 protocol.
 See [paseto-spec](https://github.com/paseto-standard/paseto-spec) for protocol details.
 
-# Example use
+# Example use with Version2
 ```python
 from paseto.protocol.version2 import encrypt, decrypt
 
@@ -58,6 +59,38 @@ plain_text = decrypt(token, key, optional_footer)
 assert plain_text == message
 print(f"token={token}")
 print(f"plain_text={plain_text}")
+print(f"message={message}")
+```
+
+# Example use with Version4
+```python
+from paseto.protocol.version4 import create_symmetric_key, decrypt, encrypt
+
+message = b"this is a secret message"  # your data
+key = create_symmetric_key()  # encryption key
+
+token = encrypt(message, key)
+plain_text = decrypt(token, key)
+
+assert plain_text == message
+print(f"token={token}")
+print(f"plain_text={plain_text}")
+print(f"message={message}")
+```
+
+### Message signing
+```python
+from paseto.protocol.version4 import create_asymmetric_key, sign, verify
+
+message = b"this is a public message"  # your data
+public_key, secret_key = create_asymmetric_key()  # signing / verifying keys
+
+token = sign(message, secret_key)
+verified_message = verify(token, public_key)
+
+assert verified_message == message
+print(f"token={token}")
+print(f"verified_message={verified_message}")
 print(f"message={message}")
 ```
 
