@@ -1,4 +1,7 @@
 """ This module contains benchmark tests intended to guide development of a performant codebase. """
+
+import hashlib
+
 import nacl.bindings
 import pysodium
 import pytest
@@ -77,3 +80,31 @@ def test_encrypt_and_decrypt_two(benchmark):
 
     plain_text = benchmark(encrypt_and_decrypt)
     assert plain_text == MESSAGE
+
+
+def test_hash_functions():
+    """Test that hash functions produce the same digest."""
+    assert (
+        pysodium.crypto_generichash(MESSAGE, KEY)
+        == hashlib.blake2b(MESSAGE, key=KEY, digest_size=32).digest()
+    )
+
+
+@pytest.mark.benchmark(group="hash")
+def test_hash_one(benchmark):
+    """Benchmark hash function."""
+
+    def hash_one():
+        return pysodium.crypto_generichash(MESSAGE, KEY)
+
+    benchmark(hash_one)
+
+
+@pytest.mark.benchmark(group="hash")
+def test_hash_two(benchmark):
+    """Benchmark hash function."""
+
+    def hash_two():
+        return hashlib.blake2b(MESSAGE, key=KEY, digest_size=32).digest()
+
+    benchmark(hash_two)
