@@ -95,8 +95,8 @@ def test_hash_functions() -> None:
 def test_hash_one(benchmark: BenchmarkFixture) -> None:
     """Benchmark hash function."""
 
-    def hash_one() -> bytes:
-        return pysodium.crypto_generichash(MESSAGE, KEY)
+    def hash_one() -> None:
+        pysodium.crypto_generichash(MESSAGE, KEY)
 
     benchmark(hash_one)
 
@@ -105,7 +105,7 @@ def test_hash_one(benchmark: BenchmarkFixture) -> None:
 def test_hash_two(benchmark: BenchmarkFixture) -> None:
     """Benchmark hash function."""
 
-    def hash_two() -> bytes:
-        return hashlib.blake2b(MESSAGE, key=KEY, digest_size=32).digest()
+    def hash_two() -> None:
+        hashlib.blake2b(MESSAGE, key=KEY, digest_size=32).digest()
 
     benchmark(hash_two)
