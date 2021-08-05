@@ -1,7 +1,7 @@
 """
 This module contains functions to help manage keys used in PASETO protocols.
 
-It includes an early implementation of Algorithm Lucidity.
+It includes an implementation of Algorithm Lucidity.
 https://github.com/paseto-standard/paseto-spec/blob/master/docs/02-Implementation-Guide/03-Algorithm-Lucidity.md
 
 A PASERK implementation may supersede this module in the future.
@@ -14,35 +14,39 @@ from typing import Tuple
 
 import pysodium
 
-KEY_PREFIX = b"k"
-KEY_LENGHT = 32
+_KEY_PREFIX = b"k"
+_KEY_LENGHT = 32
 
-TYPE_LOCAL = b".local."
-TYPE_PUBLIC = b".public."
-TYPE_SECRET = b".secret."
+_TYPE_LOCAL = b".local."
+_TYPE_PUBLIC = b".public."
+_TYPE_SECRET = b".secret."
 
 
-def _create_symmetric_key(version: int) -> bytes:
+def _create_symmetric_key(version: int, raw_key_material: bytes = b"") -> bytes:
     """Return a new symmetric key."""
     _validate_version(version)
-    return _get_key_prefix(version, TYPE_LOCAL) + urlsafe_b64encode(
-        os.urandom(KEY_LENGHT)
-    )
+    if not raw_key_material:
+        raw_key_material = os.urandom(_KEY_LENGHT)
+    return _serialize_key(version, _TYPE_LOCAL, raw_key_material)
 
 
-def _create_asymmetric_key(version: int) -> Tuple[bytes, bytes]:
+def _create_asymmetric_key(
+    version: int,
+    raw_public_key_material: bytes = b"",
+    raw_secret_key_material: bytes = b"",
+) -> Tuple[bytes, bytes]:
     """Return new public and secret keys."""
     _validate_version(version)
-    raw_public_key, raw_secret_key = pysodium.crypto_sign_seed_keypair(
-        os.urandom(pysodium.crypto_sign_SEEDBYTES)
-    )
+    if not raw_public_key_material or not raw_secret_key_material:
+        (
+            raw_public_key_material,
+            raw_secret_key_material,
+        ) = pysodium.crypto_sign_seed_keypair(
+            os.urandom(pysodium.crypto_sign_SEEDBYTES)
+        )
 
-    public_key = _get_key_prefix(version, TYPE_PUBLIC) + urlsafe_b64encode(
-        raw_public_key
-    )
-    secret_key = _get_key_prefix(version, TYPE_SECRET) + urlsafe_b64encode(
-        raw_secret_key
-    )
+    public_key: bytes = _serialize_key(version, _TYPE_PUBLIC, raw_public_key_material)
+    secret_key: bytes = _serialize_key(version, _TYPE_SECRET, raw_secret_key_material)
     return public_key, secret_key
 
 
@@ -63,7 +67,7 @@ def _validate_version(version: int) -> bool:
 
 def _get_key_prefix(version: int, key_type: bytes) -> bytes:
     """Return key prefix for serialization."""
-    return KEY_PREFIX + str(version).encode() + key_type
+    return _KEY_PREFIX + str(version).encode() + key_type
 
 
 def _verify_key(key: bytes, version: int, key_type: bytes) -> bool:
