@@ -15,7 +15,10 @@ import pytest
     ],
 )
 def test_expected_number_of_test_vectors(
-    get_all_test_vectors, version: str, test_name_startswith: str, expected_count: int
+    get_all_test_vectors: dict,
+    version: str,
+    test_name_startswith: str,
+    expected_count: int,
 ) -> None:
     """Test that official test vector specification matches expectations."""
 

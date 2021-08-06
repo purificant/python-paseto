@@ -2,8 +2,13 @@
 
 import json
 
+TransformedTestCaseV4 = tuple[str, bytes, bytes, bytes, bytes, bytes, bytes]
+TransformedTestCaseV2 = tuple[str, bytes, bytes, bytes, bytes, bytes]
 
-def transform_test_case_for_v4_public(test_case: dict) -> tuple:
+
+def transform_test_case_for_v4_public(
+    test_case: dict,
+) -> TransformedTestCaseV4:
     """
     Transform and return test cases 4-S-1 .. 4-S-3,
     from decoded json dictionary to a tuple of expected data types.
@@ -21,7 +26,7 @@ def transform_test_case_for_v4_public(test_case: dict) -> tuple:
     )
 
 
-def transform_test_case_for_v4_local(test_case: dict) -> tuple:
+def transform_test_case_for_v4_local(test_case: dict) -> TransformedTestCaseV4:
     """
     Transform and return test cases 4-E-1 .. 4-E-9,
     from decoded json dictionary to a tuple of expected data types.
@@ -39,7 +44,7 @@ def transform_test_case_for_v4_local(test_case: dict) -> tuple:
     )
 
 
-def transform_test_case_for_v2_public(test_case: dict) -> tuple:
+def transform_test_case_for_v2_public(test_case: dict) -> TransformedTestCaseV2:
     """
     Transform and return test cases 2-S-1 .. 2-S-3,
     from decoded json dictionary to a tuple of expected data types.
@@ -56,7 +61,7 @@ def transform_test_case_for_v2_public(test_case: dict) -> tuple:
     )
 
 
-def transform_test_case_for_v2_local(test_case: dict) -> tuple:
+def transform_test_case_for_v2_local(test_case: dict) -> TransformedTestCaseV2:
     """
     Transform and return test cases 2-E-1 .. 2-E-9,
     from decoded json dictionary to a tuple of expected data types.

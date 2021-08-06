@@ -6,6 +6,7 @@ Docs: https://github.com/paseto-standard/paseto-spec
 """
 
 import os
+from typing import List
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -19,7 +20,7 @@ from tests.util import (
 )
 
 
-def get_test_cases(name: str):
+def get_test_cases(name: str) -> List[dict]:
     """Return test cases filtered by name."""
     return [
         test_case
