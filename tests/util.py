@@ -1,9 +1,10 @@
 """This module contains utility functions used in tests."""
 
 import json
+from typing import Tuple
 
-TransformedTestCaseV4 = tuple[str, bytes, bytes, bytes, bytes, bytes, bytes]
-TransformedTestCaseV2 = tuple[str, bytes, bytes, bytes, bytes, bytes]
+TransformedTestCaseV4 = Tuple[str, bytes, bytes, bytes, bytes, bytes, bytes]
+TransformedTestCaseV2 = Tuple[str, bytes, bytes, bytes, bytes, bytes]
 
 
 def transform_test_case_for_v4_public(
