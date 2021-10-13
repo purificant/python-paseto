@@ -17,7 +17,7 @@ def get_all_test_vectors() -> dict:
 
 def get_test_vector(version: str) -> dict:
     """Return deserialised json."""
-    with open(get_test_vector_path(version)) as json_file:
+    with open(get_test_vector_path(version), encoding="utf-8") as json_file:
         return json.load(json_file)
 
 
