@@ -20,9 +20,11 @@ import pytest
 
 from paseto.protocol import version2
 
+# to preserve readability
+# pylint: disable=line-too-long
+
 
 @patch.object(os, "urandom")
-# pylint: disable=line-too-long, too-many-arguments
 @pytest.mark.parametrize(
     "name,key_str,nonce_str,payload,footer,token_str",
     [
@@ -150,6 +152,7 @@ def test_v2_local(
     token_str: str,
 ) -> None:
     """Tests for v2.local (Shared-Key Encryption)."""
+    # pylint: disable=line-too-long, too-many-arguments
 
     # transform input from strings that can easily be compared to rfc spec to bytes object
     form = reformat
@@ -173,7 +176,6 @@ def reformat(string_with_whitespace: str) -> str:
     return re.sub(r"\s+", "", string_with_whitespace)
 
 
-# pylint: disable=line-too-long, too-many-arguments
 @pytest.mark.parametrize(
     "name,token_str,private_key_str,public_key_str,payload,footer",
     [
@@ -231,6 +233,7 @@ def test_v2_public(
     footer: bytes,
 ) -> None:
     """Test for v2.public (Public-Key Authentication)."""
+    # pylint: disable=line-too-long, too-many-arguments
 
     # transform input from strings that can easily be compared to rfc spec to bytes object
     form = reformat

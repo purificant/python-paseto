@@ -32,7 +32,6 @@ def get_test_cases(name: str) -> List[dict]:
 
 # use a test nonce for reproducible tests
 @patch.object(os, "urandom")
-# pylint: disable=too-many-arguments
 @pytest.mark.parametrize(
     "name,nonce,key,token,payload,footer",
     [
@@ -50,6 +49,7 @@ def test_v2_local(
     footer: bytes,
 ) -> None:
     """Tests for v2.local (Shared-Key Encryption)."""
+    # pylint: disable=too-many-arguments
 
     # use non random nonce for reproducible tests
     mock.return_value = nonce
@@ -61,7 +61,6 @@ def test_v2_local(
     assert payload == version2.decrypt(token, key, footer), name
 
 
-# pylint: disable=too-many-arguments
 @pytest.mark.parametrize(
     "name,public_key,secret_key,token,payload,footer",
     [
@@ -78,6 +77,7 @@ def test_v2_public(
     footer: bytes,
 ) -> None:
     """Tests for v2.public (Public-Key Authentication)."""
+    # pylint: disable=too-many-arguments
 
     # verify that sign produces expected token
     assert token == version2.sign(payload, secret_key, footer), name
