@@ -20,7 +20,7 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.7.2"
 pysodium = "^0.7.12"
 
 [tool.poetry.dev-dependencies]
@@ -32,7 +32,7 @@ cython = "^0.29.32"
 isort = "^5.11"
 mypy = "^0.991"
 pylama = "^8.3"
-pylint = "^2.13"
+pylint = "^2.15"
 pynacl = "^1.5"
 pytest = "^7.2"
 pytest-benchmark = "^3.4"
