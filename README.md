@@ -1,7 +1,6 @@
 # python-paseto
 Platform-Agnostic Security Tokens for Python
 
-[![Build Status](https://travis-ci.com/purificant/python-paseto.svg?branch=main)](https://travis-ci.com/purificant/python-paseto)
 [![test-workflow](https://github.com/purificant/python-paseto/actions/workflows/test.yaml/badge.svg)](https://github.com/purificant/python-paseto/actions/workflows/test.yaml)
 [![PyPI version](https://badge.fury.io/py/python-paseto.svg)](https://badge.fury.io/py/python-paseto)
 [![Coverage Status](https://coveralls.io/repos/github/purificant/python-paseto/badge.svg?branch=main)](https://coveralls.io/github/purificant/python-paseto?branch=main)
