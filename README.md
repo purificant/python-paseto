@@ -4,7 +4,6 @@ Platform-Agnostic Security Tokens for Python
 [![test-workflow](https://github.com/purificant/python-paseto/actions/workflows/test.yaml/badge.svg)](https://github.com/purificant/python-paseto/actions/workflows/test.yaml)
 [![PyPI version](https://badge.fury.io/py/python-paseto.svg)](https://badge.fury.io/py/python-paseto)
 [![Coverage Status](https://coveralls.io/repos/github/purificant/python-paseto/badge.svg?branch=main)](https://coveralls.io/github/purificant/python-paseto?branch=main)
-[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/purificant/python-paseto.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/purificant/python-paseto/context:python)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
 
