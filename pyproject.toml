@@ -35,11 +35,10 @@ pylama = "^8.3"
 pylint = "^2.15"
 pynacl = "^1.5"
 pytest = "^7.2"
-pytest-benchmark = "^3.4"
-tox = "^3.25"
+pytest-benchmark = "^4.0"
 
 [tool.black]
-exclude = '/(submodules|.tox)/'
+exclude = '/(submodules)/'
 
 [tool.isort]
 profile = "black"

@@ -6,8 +6,6 @@
 __pycache__
 # pytest-cov
 .coverage
-# tox
-.tox
 # mypy
 .mypy_cache
 # poetry build artifacts
