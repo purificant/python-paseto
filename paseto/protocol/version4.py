@@ -181,7 +181,6 @@ def verify(
 
 
 def _split_key(key: bytes, nonce: bytes) -> Tuple[bytes, bytes, bytes]:
-
     hashed: bytes = hashlib.blake2b(
         INFO_ENCRYPTION + nonce, key=key, digest_size=56
     ).digest()
