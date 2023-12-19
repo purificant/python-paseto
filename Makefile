@@ -27,7 +27,7 @@ lock:
 	# ensure lock file is up to date
 	poetry lock
 	# export requirements to simplify external build processes
-	poetry export --with dev --output requirements-dev.txt
+	poetry export --with dev --output requirements-dev.txt --without-hashes
 
 # run tests
 test:
