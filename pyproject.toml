@@ -21,20 +21,20 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.8"
-pysodium = "^0.7.12"
+pysodium = "^0.7.17"
 
 [tool.poetry.dev-dependencies]
-black = "^23.1"
-codespell = "^2.2.2"
+black = "^23.12"
+codespell = "^2.2.6"
 coverage = "^6"
 coveralls = "^3.3"
-cython = "^0.29.32"
-isort = "^5.12"
-mypy = "^1.1"
-pylama = "^8.3"
-pylint = "^2.15"
+cython = "^0.29.37"
+isort = "^5.13"
+mypy = "^1.7"
+pylama = "^8.4"
+pylint = "^2.17"
 pynacl = "^1.5"
-pytest = "^7.2"
+pytest = "^7.4"
 pytest-benchmark = "^4.0"
 
 [tool.black]
