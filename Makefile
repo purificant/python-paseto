@@ -41,6 +41,7 @@ benchmark:
 coverage:
 	coverage run -m pytest --benchmark-disable
 	coverage report --fail-under=100
+	coverage lcov # generate lcov report for coveralls github action
 
 # lint code in local development
 lint: format-code code-analysis

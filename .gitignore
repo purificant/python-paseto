@@ -10,3 +10,5 @@ __pycache__
 .mypy_cache
 # poetry build artifacts
 dist
+# coverage report
+coverage.lcov
