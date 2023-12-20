@@ -36,6 +36,7 @@ pynacl = "^1.5"
 pytest = "^7.4"
 pytest-benchmark = "^4.0"
 ruff = "^0.1.8"
+setuptools = "^69.0.2"
 
 [tool.black]
 exclude = '/(submodules)/'

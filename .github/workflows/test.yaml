@@ -15,7 +15,7 @@ jobs:
   test:
     strategy:
       matrix:
-        python-version: ['3.8', '3.9', '3.10', '3.11']
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
         os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
       # do not cancel any jobs when a single job fails
       fail-fast: false
@@ -38,6 +38,7 @@ jobs:
         run: |
           pip install --no-cache-dir --upgrade pip
           pip install --no-cache-dir --requirement requirements-dev.txt
+          pip install setuptools
 
       - name: Run code linting checks
         run: make ci-lint
