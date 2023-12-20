@@ -68,6 +68,7 @@ code-analysis:
 	mypy paseto tests --ignore-missing-imports
 	# run static code analysis
 	pylint paseto tests
+	ruff check .
 
 # build and test the entire project
 build: lock install lint coverage

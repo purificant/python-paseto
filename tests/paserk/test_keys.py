@@ -16,7 +16,7 @@ from paseto.paserk.keys import (
 def test_create_symmetric_key() -> None:
     """Test that creating symmetric key returns nonempty bytes."""
     key: bytes = _create_symmetric_key(4)
-    assert type(key) == bytes
+    assert isinstance(key, bytes)
     assert len(key) > 0
 
 
@@ -25,8 +25,8 @@ def test_create_asymmetric_key() -> None:
     public_key: bytes
     secret_key: bytes
     public_key, secret_key = _create_asymmetric_key(4)
-    assert type(public_key) == bytes
-    assert type(secret_key) == bytes
+    assert isinstance(public_key, bytes)
+    assert isinstance(secret_key, bytes)
     assert len(public_key) > 0
     assert len(secret_key) > 0
 
@@ -35,7 +35,7 @@ def test_create_asymmetric_key() -> None:
 def test_serialize_deserialize_key(key: bytes) -> None:
     """Test that serialized key can be deserialized."""
     serialized = _serialize_key(version=4, key_type=b".unit_test.", raw_key=key)
-    assert type(serialized) == bytes
+    assert isinstance(serialized, bytes)
     assert len(serialized) > 0
     deserialized = _deserialize_key(serialized)
     assert deserialized == key
