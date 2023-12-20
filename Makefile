@@ -1,5 +1,5 @@
 # python version used to bootstrap local development environment
-PYTHON_VERSION=3.11.2
+PYTHON_VERSION=3.12.1
 PROJECT_NAME=python-paseto
 
 # create virtual environment using pyenv
@@ -79,5 +79,4 @@ check-spelling:
 
 # install poetry using recommended way
 get-poetry:
-	curl -sSL https://install.python-poetry.org | python3 -
-
+	pipx install poetry
