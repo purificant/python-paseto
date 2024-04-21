@@ -1,4 +1,5 @@
 """This module tests code examples from documentation."""
+
 import importlib
 
 import pytest
