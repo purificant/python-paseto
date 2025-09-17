@@ -80,3 +80,7 @@ check-spelling:
 # install poetry using recommended way
 get-poetry:
 	pipx install poetry
+
+# check for dependency updates
+check-updates:
+	poetry show --outdated
