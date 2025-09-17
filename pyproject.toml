@@ -20,23 +20,23 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 pysodium = "^0.7.17"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 black = "^24.4.0"
 codespell = "^2.2.6"
 coverage = "^7"
 cython = "^3.0.7"
-isort = "^5.13"
+isort = "^6.0"
 mypy = "^1.7"
 pylama = "^8.4"
 pylint = "^3.0"
 pynacl = "^1.5"
 pytest = "^8.1"
 pytest-benchmark = "^4.0"
-ruff = "^0.4.1"
-setuptools = "^69.0.2"
+ruff = "^0.13.0"
+setuptools = "^80.9.0"
 
 [tool.black]
 exclude = '/(submodules)/'
@@ -47,3 +47,6 @@ profile = "black"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.requires-plugins]
+poetry-plugin-export = ">=1.9"
