@@ -7,6 +7,8 @@ https://github.com/paseto-standard/test-vectors
 Documentation is here: https://github.com/paseto-standard/paseto-spec
 """
 
+# pylint: disable=too-many-positional-arguments
+
 import os
 from typing import List
 from unittest.mock import MagicMock, patch

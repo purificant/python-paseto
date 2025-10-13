@@ -12,6 +12,8 @@ Test vectors https://tools.ietf.org/html/draft-paragon-paseto-rfc-00#appendix-A.
 2-E-5, 2-E-6, 2-S-2 use footer from reference implementation instead of rfc specification.
 """
 
+# pylint: disable=too-many-positional-arguments
+
 import os
 import re
 from unittest.mock import MagicMock, patch
