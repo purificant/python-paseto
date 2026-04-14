@@ -1,4 +1,4 @@
-""" This module contains Version2 implementation of the Paseto protocol. """
+"""This module contains Version2 implementation of the Paseto protocol."""
 
 import hashlib
 import os

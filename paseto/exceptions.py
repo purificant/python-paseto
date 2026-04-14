@@ -1,4 +1,4 @@
-""" This module contains exceptions. """
+"""This module contains exceptions."""
 
 
 class PasetoException(Exception):

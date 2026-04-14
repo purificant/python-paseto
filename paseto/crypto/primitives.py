@@ -1,4 +1,4 @@
-""" This module exports third party primitives. """
+"""This module exports third party primitives."""
 
 # from nacl.bindings import crypto_aead_xchacha20poly1305_ietf_decrypt as decrypt
 # from nacl.bindings import crypto_aead_xchacha20poly1305_ietf_encrypt as encrypt

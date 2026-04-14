@@ -1,4 +1,4 @@
-""" This module contains utility functions necessary for protocol implementation. """
+"""This module contains utility functions necessary for protocol implementation."""
 
 from base64 import urlsafe_b64decode, urlsafe_b64encode
 from struct import pack

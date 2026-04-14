@@ -24,20 +24,19 @@ python = "^3.10"
 pysodium = "^0.7.17"
 
 [tool.poetry.group.dev.dependencies]
-black = "^24.4.0"
+black = "^26.3.1"
 codespell = "^2.2.6"
 coverage = "^7"
 cython = "^3.0.7"
-isort = "^6.0"
+isort = "^8.0"
 mypy = "^1.7"
-pylama = "^8.4"
-pylint = "^3.0"
+pylint = "^4.0"
 pynacl = "^1.5"
 pre-commit = "^4.0"
-pytest = "^8.1"
-pytest-benchmark = "^4.0"
-ruff = "^0.13.0"
-setuptools = "^80.9.0"
+pytest = "^9.0"
+pytest-benchmark = "^5.2"
+ruff = "^0.15.0"
+setuptools = "^82.0"
 
 [tool.black]
 exclude = '/(submodules)/'

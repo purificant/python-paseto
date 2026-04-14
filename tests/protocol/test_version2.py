@@ -1,4 +1,4 @@
-""" This module contains tests for version2 protocol implementation. """
+"""This module contains tests for version2 protocol implementation."""
 
 import pytest
 from pysodium import crypto_sign_seed_keypair, crypto_sign_SEEDBYTES

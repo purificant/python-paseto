@@ -1,4 +1,4 @@
-""" This module contains benchmark tests intended to guide development of a performant codebase. """
+"""This module contains benchmark tests intended to guide development of a performant codebase."""
 
 import hashlib
 
