@@ -84,3 +84,9 @@ get-poetry:
 # check for dependency updates
 check-updates:
 	poetry show --outdated
+
+# update dependencies to latest versions
+update:
+	poetry update
+	$(MAKE) lock
+	pre-commit autoupdate
