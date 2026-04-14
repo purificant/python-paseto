@@ -2,6 +2,9 @@ name: release pypi
 # when manually triggered
 on: workflow_dispatch
 
+permissions:
+  contents: read
+
 jobs:
   release_pypi:
     name: PyPI release
