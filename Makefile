@@ -85,6 +85,10 @@ get-poetry:
 check-updates:
 	poetry show --outdated
 
+# audit dependencies for known vulnerabilities
+audit:
+	pip-audit
+
 # update dependencies to latest versions
 update:
 	poetry update
