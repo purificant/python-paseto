@@ -1,5 +1,5 @@
 # python version used to bootstrap local development environment
-PYTHON_VERSION=3.12.3
+PYTHON_VERSION=3.14.4
 PROJECT_NAME=python-paseto
 
 # create virtual environment using pyenv
