@@ -39,8 +39,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install --no-cache-dir --upgrade pip
-          pip install --no-cache-dir --requirement requirements-dev.txt
+          python -m pip install --no-cache-dir --upgrade pip
+          python -m pip install --no-cache-dir --requirement requirements-dev.txt
 
       - name: Run code linting checks
         run: make ci-lint
