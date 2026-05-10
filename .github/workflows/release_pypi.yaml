@@ -8,7 +8,7 @@ permissions:
 jobs:
   release_pypi:
     name: PyPI release
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
