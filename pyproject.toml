@@ -37,7 +37,7 @@ pre-commit = "^4.0"
 pytest = "^9.0"
 pytest-benchmark = "^5.2"
 ruff = "^0.15.0"
-setuptools = "^82.0"
+setuptools = ">=82,<84"
 
 [tool.black]
 exclude = '/(submodules)/'
