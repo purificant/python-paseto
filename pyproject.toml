@@ -24,11 +24,9 @@ python = "^3.10"
 pysodium = "^0.7.17"
 
 [tool.poetry.group.dev.dependencies]
-black = "^26.3.1"
 codespell = "^2.2.6"
 coverage = "^7"
 cython = "^3.0.7"
-isort = "^8.0"
 mypy = "^1.7"
 pylint = "^4.0"
 pynacl = "^1.5"
@@ -36,14 +34,16 @@ pip-audit = "^2.10"
 pre-commit = "^4.0"
 pytest = "^9.0"
 pytest-benchmark = "^5.2"
-ruff = "^0.15.0"
-setuptools = "^82.0"
+ruff = "^0.16.0"
+setuptools = "^83.0"
 
-[tool.black]
-exclude = '/(submodules)/'
-
-[tool.isort]
-profile = "black"
+[tool.ruff]
+# vendored code, not ours to lint or format
+extend-exclude = ["submodules"]
+# ruff only reads [project] requires-python, which this legacy [tool.poetry] layout lacks,
+# so it falls back to its own default. keep in sync with tool.poetry.dependencies.python
+# until the pyproject moves to PEP 621.
+target-version = "py310"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
