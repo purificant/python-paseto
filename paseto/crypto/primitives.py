@@ -9,4 +9,4 @@ from pysodium import crypto_sign_verify_detached as verify
 
 # from libsodium import sign, verify, decrypt, encrypt
 
-__all__ = ["encrypt", "decrypt", "sign", "verify"]
+__all__ = ["decrypt", "encrypt", "sign", "verify"]
