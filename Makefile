@@ -51,17 +51,14 @@ ci-lint: check-code-formatting code-analysis
 
 # analyse and re-format code
 format-code:
-	# sort import statements
-	isort .
-	# format code with black
-	black .
+	# apply lint fixes, includes import sorting (I001)
+	ruff check --fix .
+	# format code
+	ruff format .
 
 # check code formatting without any changes
 check-code-formatting:
-	# check imports
-	isort --check-only .
-	# check code formatting
-	black --check .
+	ruff format --check .
 
 # static code analysis
 code-analysis:
