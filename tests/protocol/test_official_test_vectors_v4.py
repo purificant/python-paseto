@@ -8,7 +8,6 @@ Docs: https://github.com/paseto-standard/paseto-spec
 # pylint: disable=too-many-positional-arguments
 
 import os
-from typing import List
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -22,7 +21,7 @@ from tests.util import (
 )
 
 
-def get_test_cases(name: str) -> List[dict]:
+def get_test_cases(name: str) -> list[dict]:
     """Return test cases filtered by name."""
     return [
         test_case
@@ -58,14 +57,14 @@ def test_v4_local(
     key = _create_symmetric_key(4, raw_key_material)
 
     # verify that encrypt produces expected token
-    assert test_token == version4.encrypt(
-        payload, key, footer, implicit_assertion
-    ), test_name
+    assert test_token == version4.encrypt(payload, key, footer, implicit_assertion), (
+        test_name
+    )
 
     # verify that decrypt produces expected payload
-    assert payload == version4.decrypt(
-        test_token, key, footer, implicit_assertion
-    ), test_name
+    assert payload == version4.decrypt(test_token, key, footer, implicit_assertion), (
+        test_name
+    )
 
 
 @pytest.mark.parametrize(

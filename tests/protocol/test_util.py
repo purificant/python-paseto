@@ -1,7 +1,5 @@
 """This module contains unit tests for util module."""
 
-from typing import List, Tuple
-
 import pytest
 
 from paseto.protocol.util import b64, b64decode, padding_size, pae
@@ -11,7 +9,7 @@ from paseto.protocol.util import b64, b64decode, padding_size, pae
 def test_pae_reference() -> None:
     """Test PAE() function against reference values."""
 
-    test_cases: List[Tuple[List[bytes], bytes]] = [
+    test_cases: list[tuple[list[bytes], bytes]] = [
         ([], b"\x00\x00\x00\x00\x00\x00\x00\x00"),
         ([b""], b"\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"),
         (

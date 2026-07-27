@@ -7,7 +7,6 @@ https://github.com/paseto-standard/paseto-spec/blob/master/docs/01-Protocol-Vers
 import hashlib
 import hmac
 import os
-from typing import Tuple
 
 from paseto.crypto import libsodium_wrapper, primitives
 from paseto.exceptions import InvalidKey, InvalidMac
@@ -180,7 +179,7 @@ def verify(
     return message
 
 
-def _split_key(key: bytes, nonce: bytes) -> Tuple[bytes, bytes, bytes]:
+def _split_key(key: bytes, nonce: bytes) -> tuple[bytes, bytes, bytes]:
     hashed: bytes = hashlib.blake2b(
         INFO_ENCRYPTION + nonce, key=key, digest_size=56
     ).digest()
@@ -203,6 +202,6 @@ def create_symmetric_key() -> bytes:
     return _create_symmetric_key(4)
 
 
-def create_asymmetric_key() -> Tuple[bytes, bytes]:
+def create_asymmetric_key() -> tuple[bytes, bytes]:
     """Return key pair for use with sign() and verify()."""
     return _create_asymmetric_key(4)

@@ -10,7 +10,6 @@ https://github.com/paseto-standard/paserk
 
 import os
 from base64 import urlsafe_b64decode, urlsafe_b64encode
-from typing import Tuple
 
 import pysodium
 
@@ -34,7 +33,7 @@ def _create_asymmetric_key(
     version: int,
     raw_public_key_material: bytes = b"",
     raw_secret_key_material: bytes = b"",
-) -> Tuple[bytes, bytes]:
+) -> tuple[bytes, bytes]:
     """Return new public and secret keys."""
     _validate_version(version)
     if not raw_public_key_material or not raw_secret_key_material:

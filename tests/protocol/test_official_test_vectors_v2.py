@@ -10,7 +10,6 @@ Documentation is here: https://github.com/paseto-standard/paseto-spec
 # pylint: disable=too-many-positional-arguments
 
 import os
-from typing import List
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -23,7 +22,7 @@ from tests.util import (
 )
 
 
-def get_test_cases(name: str) -> List[dict]:
+def get_test_cases(name: str) -> list[dict]:
     """Return test cases filtered by name."""
     return [
         test_case

@@ -2,11 +2,10 @@
 
 from base64 import urlsafe_b64decode, urlsafe_b64encode
 from struct import pack
-from typing import List
 
 
 # specification: https://tools.ietf.org/html/draft-paragon-paseto-rfc-00#section-2.2.1
-def pae(pieces: List[bytes]) -> bytes:
+def pae(pieces: list[bytes]) -> bytes:
     """Applies Pre-Authentication Encoding (PAE) to input."""
 
     if not isinstance(pieces, list):
