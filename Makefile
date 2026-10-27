@@ -1,5 +1,5 @@
 # python version used to bootstrap local development environment
-PYTHON_VERSION=3.14.4
+PYTHON_VERSION=3.15.2
 PROJECT_NAME=python-paseto
 
 # create virtual environment using pyenv
@@ -27,7 +27,7 @@ lock:
 	# ensure lock file is up to date
 	poetry lock
 	# export requirements to simplify external build processes
-	poetry export --with dev --output requirements-dev.txt --without-hashes
+	poetry export --with dev --output requirements-dev.txt
 
 # run tests
 test:

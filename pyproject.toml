@@ -1,18 +1,24 @@
-[tool.poetry]
+[project]
 name = "python-paseto"
 version = "0.5.2"
 description = "Platform-Agnostic Security Tokens for Python"
 authors = []
 license = "MIT"
-packages = [{ include = "paseto" }]
 readme = "README.md"
+requires-python = ">=3.11,<4.0"
+keywords = ["paseto", "token", "security", "crypto"]
+dynamic = ["classifiers", "dependencies"]
+
+[project.urls]
 homepage = "https://github.com/purificant/python-paseto"
 repository = "https://github.com/purificant/python-paseto"
 documentation = "https://github.com/purificant/python-paseto"
-keywords = ["paseto", "token", "security", "crypto"]
+
+[tool.poetry]
+requires-poetry = ">=2.5"
+packages = [{ include = "paseto" }]
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Topic :: Security",
     "Topic :: Security :: Cryptography",
@@ -20,7 +26,6 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.10"
 pysodium = "^0.7.17"
 
 [tool.poetry.group.dev.dependencies]
@@ -34,20 +39,16 @@ pip-audit = "^2.10"
 pre-commit = "^4.0"
 pytest = "^9.0"
 pytest-benchmark = "^5.2"
-ruff = "^0.16.0"
-setuptools = "^83.0"
+ruff = "^0.17.0"
+setuptools = "^84.0"
 
 [tool.ruff]
 # vendored code, not ours to lint or format
 extend-exclude = ["submodules"]
-# ruff only reads [project] requires-python, which this legacy [tool.poetry] layout lacks,
-# so it falls back to its own default. keep in sync with tool.poetry.dependencies.python
-# until the pyproject moves to PEP 621.
-target-version = "py310"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core>=2.5.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.requires-plugins]
-poetry-plugin-export = ">=1.9"
+poetry-plugin-export = ">=1.10.1"
