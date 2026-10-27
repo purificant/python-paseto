@@ -5,6 +5,8 @@ on: workflow_dispatch
 permissions:
   contents: read
 
+cache-mode: none
+
 jobs:
   release_pypi:
     name: PyPI release
