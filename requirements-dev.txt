@@ -1,7 +1,7 @@
 astroid==4.0.4 ; python_version >= "3.10" and python_version < "4.0"
 boolean-py==5.0 ; python_version >= "3.10" and python_version < "4.0"
 cachecontrol==0.14.4 ; python_version >= "3.10" and python_version < "4.0"
-certifi==2026.7.22 ; python_version >= "3.10" and python_version < "4.0"
+certifi==2026.10.18 ; python_version >= "3.10" and python_version < "4.0"
 cffi==2.1.0 ; python_version >= "3.10" and python_version < "4.0" and platform_python_implementation != "PyPy"
 cfgv==3.5.0 ; python_version >= "3.10" and python_version < "4.0"
 charset-normalizer==3.4.9 ; python_version >= "3.10" and python_version < "4.0"
