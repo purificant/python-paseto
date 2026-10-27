@@ -2,10 +2,16 @@
 
 import pytest
 
-from paseto.exceptions import InvalidKey, InvalidMac
+from paseto.exceptions import (
+    InvalidEncoding,
+    InvalidKey,
+    InvalidMac,
+    InvalidSignature,
+)
 from paseto.paserk.keys import _create_symmetric_key
 from paseto.protocol import version4
-from paseto.protocol.version4 import _verify_key
+from paseto.protocol.util import b64, b64decode
+from tests.util import non_canonical_variants
 
 
 def test_encrypt_decrypt() -> None:
@@ -50,7 +56,73 @@ def test_decrypt_invalid_mac() -> None:
         version4.decrypt(token_with_invalid_mac, key)
 
 
-def test_verify_key() -> None:
-    """Test that exception is raised when key is not verified."""
+def test_wrong_purpose_key() -> None:
+    """Test that each function rejects keys meant for another purpose."""
+    local_key: bytes = version4.create_symmetric_key()
+    public_key, secret_key = version4.create_asymmetric_key()
+
     with pytest.raises(InvalidKey):
-        _verify_key(b"", b"some type")
+        version4.encrypt(b"foo", public_key)
+    with pytest.raises(InvalidKey):
+        version4.decrypt(b"v4.local.foo", secret_key)
+    with pytest.raises(InvalidKey):
+        version4.sign(b"foo", local_key)
+    with pytest.raises(InvalidKey):
+        version4.verify(b"v4.public.foo", secret_key)
+
+
+def test_short_local_key() -> None:
+    """Test that v4.local keys must be 32 bytes, as Version4.md step 1 requires."""
+    short_key: bytes = b"k4.local." + b64(b"0" * 31)
+
+    with pytest.raises(InvalidKey):
+        version4.encrypt(b"foo", short_key)
+    with pytest.raises(InvalidKey):
+        version4.decrypt(b"v4.local.foo", short_key)
+
+
+def test_decrypt_non_canonical_encoding() -> None:
+    """Test that decrypt() rejects tokens whose base64url is not canonical."""
+    key: bytes = version4.create_symmetric_key()
+    token: bytes = version4.encrypt(b"foo", key)
+
+    for variant in non_canonical_variants(token, version4.HEADER_LOCAL):
+        with pytest.raises(InvalidEncoding):
+            version4.decrypt(variant, key)
+
+
+def test_verify_non_canonical_encoding() -> None:
+    """Test that verify() rejects tokens whose base64url is not canonical."""
+    public_key, secret_key = version4.create_asymmetric_key()
+    token: bytes = version4.sign(b"foo", secret_key)
+
+    for variant in non_canonical_variants(token, version4.HEADER_PUBLIC):
+        with pytest.raises(InvalidEncoding):
+            version4.verify(variant, public_key)
+
+
+def test_sign_mismatched_secret_key() -> None:
+    """Test that sign() refuses a secret key whose public half was swapped.
+
+    Signing one message under two public halves would leak the secret scalar.
+    """
+    _, secret_key = version4.create_asymmetric_key()
+    other_public_key, _ = version4.create_asymmetric_key()
+    raw_secret_key: bytes = b64decode(secret_key.removeprefix(b"k4.secret."))
+    raw_other_public_key: bytes = b64decode(
+        other_public_key.removeprefix(b"k4.public.")
+    )
+    tampered: bytes = b"k4.secret." + b64(raw_secret_key[:32] + raw_other_public_key)
+
+    with pytest.raises(InvalidKey):
+        version4.sign(b"foo", tampered)
+
+
+def test_verify_invalid_signature() -> None:
+    """Test that verify() raises InvalidSignature for a token from another key."""
+    _, secret_key = version4.create_asymmetric_key()
+    other_public_key, _ = version4.create_asymmetric_key()
+    token: bytes = version4.sign(b"foo", secret_key)
+
+    with pytest.raises(InvalidSignature):
+        version4.verify(token, other_public_key)

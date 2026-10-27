@@ -2,6 +2,7 @@
 
 import pytest
 
+from paseto.exceptions import InvalidEncoding, InvalidSignature, PasetoException
 from paseto.protocol.util import b64, b64decode, padding_size, pae
 
 
@@ -100,6 +101,35 @@ def test_b64_reference() -> None:
     for test_case in test_cases:
         assert b64(test_case[0]) == test_case[1]
         assert b64decode(test_case[1]) == test_case[0]
+
+
+# https://github.com/paseto-standard/paseto-spec/blob/master/docs/01-Protocol-Versions/Common.md#base64-decoding
+@pytest.mark.parametrize(
+    "encoded",
+    [
+        b"Zh",  # nonzero trailing bits, b64(b"f") is b"Zg"
+        b"Zm9vYh",  # nonzero trailing bits, b64(b"foob") is b"Zm9vYg"
+        b"Zm9vYmF",  # nonzero trailing bits, b64(b"fooba") is b"Zm9vYmE"
+        b"Zg==",  # padding
+        b"Zm8=",  # padding
+        b"Zm9vY",  # impossible length
+        b"Zm9v!",  # character outside the alphabet
+        b"Zm9v\n",  # trailing newline
+        b"Zm 9v",  # whitespace
+        b"+/8",  # standard alphabet, b64(b"\xfb\xff") is b"-_8"
+    ],
+)
+def test_b64decode_non_canonical(encoded: bytes) -> None:
+    """Test that b64decode() rejects anything b64() would not produce."""
+    with pytest.raises(InvalidEncoding):
+        b64decode(encoded)
+
+
+@pytest.mark.parametrize("exception", [InvalidEncoding, InvalidSignature])
+def test_value_error_hierarchy(exception: type[Exception]) -> None:
+    """Test that exceptions replacing a ValueError are caught as either type."""
+    assert issubclass(exception, PasetoException)
+    assert issubclass(exception, ValueError)
 
 
 def test_padding_size() -> None:

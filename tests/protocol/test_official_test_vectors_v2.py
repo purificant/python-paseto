@@ -14,6 +14,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+from paseto.exceptions import PasetoException
 from paseto.protocol import version2
 from tests.conftest import get_test_vector
 from tests.util import (
@@ -31,12 +32,21 @@ def get_test_cases(name: str) -> list[dict]:
     ]
 
 
+def get_expect_fail_test_cases() -> list[dict]:
+    """Return test cases that must fail to decode."""
+    return [
+        test_case
+        for test_case in get_test_vector("v2")["tests"]
+        if test_case["expect-fail"]
+    ]
+
+
 # use a test nonce for reproducible tests
 @patch.object(os, "urandom")
 @pytest.mark.parametrize(
     "name,nonce,key,token,payload,footer",
     [
-        transform_test_case_for_v2_local(test_case)
+        pytest.param(*transform_test_case_for_v2_local(test_case), id=test_case["name"])
         for test_case in get_test_cases("2-E")
     ],
 )
@@ -65,7 +75,9 @@ def test_v2_local(
 @pytest.mark.parametrize(
     "name,public_key,secret_key,token,payload,footer",
     [
-        transform_test_case_for_v2_public(test_case)
+        pytest.param(
+            *transform_test_case_for_v2_public(test_case), id=test_case["name"]
+        )
         for test_case in get_test_cases("2-S")
     ],
 )
@@ -85,3 +97,25 @@ def test_v2_public(
 
     # verify that token contains expected payload
     assert payload == version2.verify(token, public_key, footer), name
+
+
+@pytest.mark.parametrize(
+    "test_case",
+    [
+        pytest.param(test_case, id=test_case["name"])
+        for test_case in get_expect_fail_test_cases()
+    ],
+)
+def test_v2_expect_fail(test_case: dict) -> None:
+    """Tests that tokens marked expect-fail are rejected."""
+    token: bytes = test_case["token"].encode()
+    footer: bytes = test_case["footer"].encode()
+
+    # v2 has no implicit assertions, so "implicit-assertion" is not used
+    # a case carries either a symmetric key or a key pair, which picks the operation
+    if "key" in test_case:
+        with pytest.raises(PasetoException):
+            version2.decrypt(token, bytes.fromhex(test_case["key"]), footer)
+    else:
+        with pytest.raises(PasetoException):
+            version2.verify(token, bytes.fromhex(test_case["public-key"]), footer)

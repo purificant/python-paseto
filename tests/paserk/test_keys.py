@@ -1,8 +1,15 @@
 """This module contains tests for functions that manage keys."""
 
+from base64 import urlsafe_b64encode
+
+import pysodium
 import pytest
 
+from paseto.exceptions import InvalidKey
 from paseto.paserk.keys import (
+    _TYPE_LOCAL,
+    _TYPE_PUBLIC,
+    _TYPE_SECRET,
     _create_asymmetric_key,
     _create_symmetric_key,
     _deserialize_key,
@@ -11,6 +18,10 @@ from paseto.paserk.keys import (
     _validate_version,
     _verify_key,
 )
+from paseto.protocol.util import b64
+
+PUBLIC_KEY, SECRET_KEY = pysodium.crypto_sign_seed_keypair(b"2" * 32)
+OTHER_PUBLIC_KEY, _ = pysodium.crypto_sign_seed_keypair(b"3" * 32)
 
 
 def test_create_symmetric_key() -> None:
@@ -31,14 +42,88 @@ def test_create_asymmetric_key() -> None:
     assert len(secret_key) > 0
 
 
-@pytest.mark.parametrize("key", [b"foo", b"bar", b""])
-def test_serialize_deserialize_key(key: bytes) -> None:
+@pytest.mark.parametrize(
+    "key_type,key",
+    [(_TYPE_LOCAL, b"0" * 32), (_TYPE_PUBLIC, PUBLIC_KEY), (_TYPE_SECRET, SECRET_KEY)],
+)
+def test_serialize_deserialize_key(key_type: bytes, key: bytes) -> None:
     """Test that serialized key can be deserialized."""
-    serialized = _serialize_key(version=4, key_type=b".unit_test.", raw_key=key)
-    assert isinstance(serialized, bytes)
-    assert len(serialized) > 0
-    deserialized = _deserialize_key(serialized)
+    serialized = _serialize_key(version=4, key_type=key_type, raw_key=key)
+    assert not serialized.endswith(b"=")
+    deserialized = _deserialize_key(key=serialized, version=4, key_type=key_type)
     assert deserialized == key
+
+
+@pytest.mark.parametrize(
+    "key_type,key",
+    [(_TYPE_LOCAL, b"0" * 32), (_TYPE_PUBLIC, PUBLIC_KEY), (_TYPE_SECRET, SECRET_KEY)],
+)
+def test_deserialize_padded_key(key_type: bytes, key: bytes) -> None:
+    """Test that keys in the padded format of older releases still deserialize."""
+    padded: bytes = _get_key_prefix(4, key_type) + urlsafe_b64encode(key)
+    assert padded.endswith(b"=")
+    assert _deserialize_key(key=padded, version=4, key_type=key_type) == key
+
+
+@pytest.mark.parametrize(
+    "key_type,length",
+    [
+        (_TYPE_LOCAL, 31),
+        (_TYPE_LOCAL, 33),
+        (_TYPE_PUBLIC, 31),
+        (_TYPE_PUBLIC, 33),
+        (_TYPE_SECRET, 63),
+        (_TYPE_SECRET, 65),
+    ],
+)
+def test_serialize_key_invalid_length(key_type: bytes, length: int) -> None:
+    """Test that raw keys of the wrong length are not serialized."""
+    with pytest.raises(InvalidKey):
+        _serialize_key(version=4, key_type=key_type, raw_key=b"0" * length)
+
+
+@pytest.mark.parametrize(
+    "key",
+    [
+        # wrong version
+        b"k3.local.MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA",
+        # wrong purpose
+        b"k4.public.MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA",
+        # 31 bytes
+        b"k4.local.MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMA",
+        # 33 bytes
+        b"k4.local.MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAw",
+        # nonzero trailing bits
+        b"k4.local.MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDB",
+        # padding that does not match the length
+        b"k4.local.MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA==",
+        # character outside the base64url alphabet
+        b"k4.local.MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwM+A",
+    ],
+)
+def test_deserialize_key_invalid(key: bytes) -> None:
+    """Test that keys that are not valid k4.local keys are rejected."""
+    with pytest.raises(InvalidKey):
+        _deserialize_key(key=key, version=4, key_type=_TYPE_LOCAL)
+
+
+def test_serialize_mismatched_secret_key() -> None:
+    """Test that a secret key whose public half doesn't match its seed is rejected."""
+    with pytest.raises(InvalidKey):
+        _serialize_key(4, _TYPE_SECRET, SECRET_KEY[:32] + OTHER_PUBLIC_KEY)
+
+
+def test_deserialize_mismatched_secret_key() -> None:
+    """Test that a stored secret key with a swapped public half is rejected."""
+    tampered: bytes = b"k4.secret." + b64(SECRET_KEY[:32] + OTHER_PUBLIC_KEY)
+    with pytest.raises(InvalidKey):
+        _deserialize_key(key=tampered, version=4, key_type=_TYPE_SECRET)
+
+
+def test_create_asymmetric_key_mismatched_pair() -> None:
+    """Test that a public key from another key pair is rejected."""
+    with pytest.raises(InvalidKey):
+        _create_asymmetric_key(4, OTHER_PUBLIC_KEY, SECRET_KEY)
 
 
 def test_validate_version() -> None:

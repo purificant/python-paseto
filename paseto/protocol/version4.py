@@ -9,7 +9,7 @@ import hmac
 import os
 
 from paseto.crypto import libsodium_wrapper, primitives
-from paseto.exceptions import InvalidKey, InvalidMac
+from paseto.exceptions import InvalidMac
 from paseto.paserk.keys import (
     _TYPE_LOCAL,
     _TYPE_PUBLIC,
@@ -18,8 +18,12 @@ from paseto.paserk.keys import (
     _create_symmetric_key,
     _deserialize_key,
 )
-from paseto.paserk.keys import _verify_key as _generic_verify_key
-from paseto.protocol.common import check_footer, check_header, decode_message
+from paseto.protocol.common import (
+    check_footer,
+    check_header,
+    decode_message,
+    verify_signature,
+)
 from paseto.protocol.util import b64, pae
 
 HEADER_LOCAL = b"v4.local."
@@ -40,8 +44,7 @@ def encrypt(
     """PASETO Version4 encrypt function."""
 
     # verify that key is intended for use with this function
-    _verify_key(key, _TYPE_LOCAL)
-    raw_key: bytes = _deserialize_key(key)
+    raw_key: bytes = _deserialize_key(key, 4, _TYPE_LOCAL)
 
     # Step 1
     header: bytes = HEADER_LOCAL
@@ -81,8 +84,7 @@ def decrypt(
     """PASETO Version4 decrypt function."""
 
     # verify that key is intended for use with this function
-    _verify_key(key, _TYPE_LOCAL)
-    raw_key: bytes = _deserialize_key(key)
+    raw_key: bytes = _deserialize_key(key, 4, _TYPE_LOCAL)
 
     # Step 1
     check_footer(message, footer)
@@ -127,8 +129,7 @@ def sign(
     """Sign message and return token which can then be used with verify()."""
 
     # verify that key is intended for use with this function
-    _verify_key(secret_key, _TYPE_SECRET)
-    raw_secret_key: bytes = _deserialize_key(secret_key)
+    raw_secret_key: bytes = _deserialize_key(secret_key, 4, _TYPE_SECRET)
 
     # Step 1
     header = HEADER_PUBLIC
@@ -156,8 +157,7 @@ def verify(
     """Verify signature and return message. Raises exception if signature is invalid."""
 
     # verify that key is intended for use with this function
-    _verify_key(public_key, _TYPE_PUBLIC)
-    raw_public_key: bytes = _deserialize_key(public_key)
+    raw_public_key: bytes = _deserialize_key(public_key, 4, _TYPE_PUBLIC)
 
     # Step 1
     check_footer(signed_message, footer)
@@ -175,7 +175,7 @@ def verify(
     message2 = pae([header, message, footer, implicit_assertion])
 
     # Steps 5 and 6
-    primitives.verify(signature, message2, raw_public_key)
+    verify_signature(signature, message2, raw_public_key)
     return message
 
 
@@ -190,11 +190,6 @@ def _split_key(key: bytes, nonce: bytes) -> tuple[bytes, bytes, bytes]:
     ).digest()
 
     return encryption_key, authentication_key, nonce2
-
-
-def _verify_key(key: bytes, key_type: bytes) -> None:
-    if not _generic_verify_key(key, 4, key_type):
-        raise InvalidKey
 
 
 def create_symmetric_key() -> bytes:

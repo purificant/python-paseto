@@ -4,7 +4,12 @@ import hashlib
 import os
 
 from paseto.crypto import primitives
-from paseto.protocol.common import check_footer, check_header, decode_message
+from paseto.protocol.common import (
+    check_footer,
+    check_header,
+    decode_message,
+    verify_signature,
+)
 
 from .util import b64, pae
 
@@ -149,7 +154,7 @@ def verify(signed_message: bytes, public_key: bytes, footer: bytes = b"") -> byt
 
     # 5.  Use Ed25519 to verify that the signature is valid for the message
     # 6.  If the signature is valid, return "m".  Otherwise, throw an exception.
-    primitives.verify(signature, message2, public_key)
+    verify_signature(signature, message2, public_key)
     return message
 
 

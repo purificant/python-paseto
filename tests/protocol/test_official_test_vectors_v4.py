@@ -12,6 +12,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+from paseto.exceptions import PasetoException
 from paseto.paserk.keys import _create_asymmetric_key, _create_symmetric_key
 from paseto.protocol import version4
 from tests.conftest import get_test_vector
@@ -30,12 +31,21 @@ def get_test_cases(name: str) -> list[dict]:
     ]
 
 
+def get_expect_fail_test_cases() -> list[dict]:
+    """Return test cases that must fail to decode."""
+    return [
+        test_case
+        for test_case in get_test_vector("v4")["tests"]
+        if test_case["expect-fail"]
+    ]
+
+
 # use a test nonce for reproducible tests
 @patch.object(os, "urandom")
 @pytest.mark.parametrize(
     "test_name,nonce,raw_key_material,test_token,payload,footer,implicit_assertion",
     [
-        transform_test_case_for_v4_local(test_case)
+        pytest.param(*transform_test_case_for_v4_local(test_case), id=test_case["name"])
         for test_case in get_test_cases("4-E")
     ],
 )
@@ -70,7 +80,9 @@ def test_v4_local(
 @pytest.mark.parametrize(
     "test_name,raw_public_key,raw_secret_key,test_token,payload,footer,implicit_assertion",
     [
-        transform_test_case_for_v4_public(test_case)
+        pytest.param(
+            *transform_test_case_for_v4_public(test_case), id=test_case["name"]
+        )
         for test_case in get_test_cases("4-S")
     ],
 )
@@ -97,3 +109,31 @@ def test_v4_public(
     assert payload == version4.verify(
         test_token, public_key, footer, implicit_assertion
     ), test_name
+
+
+@pytest.mark.parametrize(
+    "test_case",
+    [
+        pytest.param(test_case, id=test_case["name"])
+        for test_case in get_expect_fail_test_cases()
+    ],
+)
+def test_v4_expect_fail(test_case: dict) -> None:
+    """Tests that tokens marked expect-fail are rejected."""
+    token: bytes = test_case["token"].encode()
+    footer: bytes = test_case["footer"].encode()
+    implicit_assertion: bytes = test_case["implicit-assertion"].encode()
+
+    # a case carries either a symmetric key or a key pair, which picks the operation
+    if "key" in test_case:
+        key: bytes = _create_symmetric_key(4, bytes.fromhex(test_case["key"]))
+        with pytest.raises(PasetoException):
+            version4.decrypt(token, key, footer, implicit_assertion)
+    else:
+        public_key, _ = _create_asymmetric_key(
+            4,
+            bytes.fromhex(test_case["public-key"]),
+            bytes.fromhex(test_case["secret-key"]),
+        )
+        with pytest.raises(PasetoException):
+            version4.verify(token, public_key, footer, implicit_assertion)

@@ -1,7 +1,12 @@
 """This module contains utility functions necessary for protocol implementation."""
 
+import re
 from base64 import urlsafe_b64decode, urlsafe_b64encode
 from struct import pack
+
+from paseto.exceptions import InvalidEncoding
+
+_BASE64URL_ALPHABET = re.compile(rb"[A-Za-z0-9_-]*")
 
 
 # specification: https://tools.ietf.org/html/draft-paragon-paseto-rfc-00#section-2.2.1
@@ -34,8 +39,27 @@ def b64(input_bytes: bytes) -> bytes:
 
 
 def b64decode(input_bytes: bytes) -> bytes:
-    """Returns base64 decoding by reversing b64()."""
-    return urlsafe_b64decode(input_bytes + b"=" * padding_size(len(input_bytes)))
+    """Returns base64 decoding by reversing b64().
+
+    Raises:
+        InvalidEncoding: If b64() would not produce input_bytes for any input.
+    """
+    # https://github.com/paseto-standard/paseto-spec/blob/master/docs/01-Protocol-Versions/Common.md#base64-decoding
+    # "=" padding is outside the alphabet, so this also rejects it
+    if not _BASE64URL_ALPHABET.fullmatch(input_bytes):
+        raise InvalidEncoding("Invalid base64url character")
+
+    try:
+        padding: bytes = b"=" * padding_size(len(input_bytes))
+    except ValueError as error:
+        raise InvalidEncoding("Invalid base64url length") from error
+
+    decoded: bytes = urlsafe_b64decode(input_bytes + padding)
+    # stdlib ignores the unused trailing bits, the spec requires them to be zero
+    if b64(decoded) != input_bytes:
+        raise InvalidEncoding("Nonzero trailing bits in base64url")
+
+    return decoded
 
 
 def padding_size(num: int) -> int:
