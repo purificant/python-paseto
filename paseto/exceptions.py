@@ -13,7 +13,8 @@ class InvalidHeader(PasetoException):
     """Message contains incorrect header."""
 
 
-class InvalidMac(PasetoException):
+# ValueError too, so callers that caught ValueError from pysodium in v2 still do
+class InvalidMac(PasetoException, ValueError):
     """Invalid MAC for given ciphertext in decrypt."""
 
 

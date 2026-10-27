@@ -4,13 +4,7 @@ import hmac
 
 from paseto.crypto import primitives
 from paseto.exceptions import InvalidFooter, InvalidHeader, InvalidSignature
-from paseto.protocol.util import b64, b64decode
-
-
-def check_footer(message: bytes, footer: bytes) -> None:
-    """Check that message contains a valid footer."""
-    if footer and not hmac.compare_digest(b64(footer), message.split(b".")[-1]):
-        raise InvalidFooter("Invalid message footer")
+from paseto.protocol.util import b64
 
 
 def check_header(message: bytes, header: bytes) -> None:
@@ -32,9 +26,24 @@ def verify_signature(signature: bytes, message: bytes, public_key: bytes) -> Non
         raise InvalidSignature("Invalid signature") from error
 
 
-def decode_message(message: bytes, header_length: int) -> bytes:
-    """Returns message decoded into raw binary."""
-    return b64decode(
-        # strip header and remove any footer
-        message[header_length:].split(b".")[0]
-    )
+def encode_message(header: bytes, payload: bytes, footer: bytes) -> bytes:
+    """Return header || b64(payload), plus "." || b64(footer) if footer is set."""
+    message: bytes = header + b64(payload)
+    if footer:
+        message += b"." + b64(footer)
+    return message
+
+
+def validate_and_remove_footer(token: bytes, footer: bytes) -> bytes:
+    """Return token without "." || b64(footer), after checking that token ends with it.
+
+    Raises:
+        InvalidFooter: If footer is set and token does not end with it.
+    """
+    if not footer:
+        return token
+
+    tail: bytes = b"." + b64(footer)
+    if not hmac.compare_digest(token[-len(tail) :], tail):
+        raise InvalidFooter("Invalid message footer")
+    return token[: -len(tail)]

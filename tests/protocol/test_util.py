@@ -2,7 +2,12 @@
 
 import pytest
 
-from paseto.exceptions import InvalidEncoding, InvalidSignature, PasetoException
+from paseto.exceptions import (
+    InvalidEncoding,
+    InvalidMac,
+    InvalidSignature,
+    PasetoException,
+)
 from paseto.protocol.util import b64, b64decode, padding_size, pae
 
 
@@ -125,7 +130,7 @@ def test_b64decode_non_canonical(encoded: bytes) -> None:
         b64decode(encoded)
 
 
-@pytest.mark.parametrize("exception", [InvalidEncoding, InvalidSignature])
+@pytest.mark.parametrize("exception", [InvalidEncoding, InvalidMac, InvalidSignature])
 def test_value_error_hierarchy(exception: type[Exception]) -> None:
     """Test that exceptions replacing a ValueError are caught as either type."""
     assert issubclass(exception, PasetoException)

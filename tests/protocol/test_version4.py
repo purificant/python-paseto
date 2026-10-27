@@ -11,7 +11,7 @@ from paseto.exceptions import (
 from paseto.paserk.keys import _create_symmetric_key
 from paseto.protocol import version4
 from paseto.protocol.util import b64, b64decode
-from tests.util import non_canonical_variants
+from tests.util import extra_segment_variants, non_canonical_variants
 
 
 def test_encrypt_decrypt() -> None:
@@ -126,3 +126,25 @@ def test_verify_invalid_signature() -> None:
 
     with pytest.raises(InvalidSignature):
         version4.verify(token, other_public_key)
+
+
+@pytest.mark.parametrize("footer", [b"", b"kid-1"])
+def test_decrypt_extra_segment(footer: bytes) -> None:
+    """Test that decrypt() rejects tokens with an extra "." segment."""
+    key: bytes = version4.create_symmetric_key()
+    token: bytes = version4.encrypt(b"foo", key, footer=footer)
+
+    for variant in extra_segment_variants(token=token, footer=footer):
+        with pytest.raises(InvalidEncoding):
+            version4.decrypt(variant, key, footer=footer)
+
+
+@pytest.mark.parametrize("footer", [b"", b"kid-1"])
+def test_verify_extra_segment(footer: bytes) -> None:
+    """Test that verify() rejects tokens with an extra "." segment."""
+    public_key, secret_key = version4.create_asymmetric_key()
+    token: bytes = version4.sign(b"foo", secret_key, footer=footer)
+
+    for variant in extra_segment_variants(token=token, footer=footer):
+        with pytest.raises(InvalidEncoding):
+            version4.verify(variant, public_key, footer=footer)

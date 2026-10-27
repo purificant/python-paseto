@@ -9,6 +9,9 @@ import pytest
 USED_TEST_VECTORS: set[str] = {
     "v2",
     "v4",
+    "PASERK/k2.local",
+    "PASERK/k2.public",
+    "PASERK/k2.secret",
     "PASERK/k4.local",
     "PASERK/k4.public",
     "PASERK/k4.secret",

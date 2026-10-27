@@ -66,6 +66,17 @@ def test_deserialize_padded_key(key_type: bytes, key: bytes) -> None:
 
 
 @pytest.mark.parametrize(
+    "key_type,key",
+    [(_TYPE_LOCAL, b"0" * 32), (_TYPE_PUBLIC, PUBLIC_KEY), (_TYPE_SECRET, SECRET_KEY)],
+)
+def test_deserialize_padded_k2_key(key_type: bytes, key: bytes) -> None:
+    """Test that k2 keys are read unpadded only, since no release wrote them padded."""
+    padded: bytes = _get_key_prefix(2, key_type) + urlsafe_b64encode(key)
+    with pytest.raises(InvalidKey):
+        _deserialize_key(key=padded, version=2, key_type=key_type)
+
+
+@pytest.mark.parametrize(
     "key_type,length",
     [
         (_TYPE_LOCAL, 31),
@@ -126,12 +137,13 @@ def test_create_asymmetric_key_mismatched_pair() -> None:
         _create_asymmetric_key(4, OTHER_PUBLIC_KEY, SECRET_KEY)
 
 
-def test_validate_version() -> None:
+@pytest.mark.parametrize("version", [2, 4])
+def test_validate_version(version: int) -> None:
     """Test that supported versions are validated."""
-    assert _validate_version(4)
+    assert _validate_version(version)
 
 
-@pytest.mark.parametrize("version", [1, 2, 3, 0, 5, 6])
+@pytest.mark.parametrize("version", [1, 3, 0, 5, 6])
 def test_validate_version_invalid(version: int) -> None:
     """Test that unsupported versions are not validated."""
     assert not _validate_version(version)
@@ -142,8 +154,18 @@ def test_get_key_prefix() -> None:
     assert _get_key_prefix(4, b".unit_test.") == b"k4.unit_test."
 
 
+def test_get_key_prefix_unsupported_version() -> None:
+    """Test that keys are neither created nor read for unsupported versions."""
+    with pytest.raises(ValueError, match="Unsupported version"):
+        _create_symmetric_key(version=3)
+    with pytest.raises(ValueError, match="Unsupported version"):
+        _create_asymmetric_key(version=3)
+    with pytest.raises(ValueError, match="Unsupported version"):
+        _deserialize_key(key=b"k3.local.data", version=3, key_type=_TYPE_LOCAL)
+
+
 def test_verify_key() -> None:
     """Test checking key prefix."""
     assert _verify_key(b"k4.unit_test.data", 4, b".unit_test.")
-    assert not _verify_key(b"k4.unit_test.data", 3, b".unit_test.")
-    assert not _verify_key(b"k4.unit_test.data", 3, b".something_else.")
+    assert not _verify_key(b"k4.unit_test.data", 2, b".unit_test.")
+    assert not _verify_key(b"k4.unit_test.data", 2, b".something_else.")

@@ -30,10 +30,10 @@ See [paseto-spec](https://github.com/paseto-standard/paseto-spec) for protocol d
 
 # Example use with Version2
 ```python
-from paseto.protocol.version2 import encrypt, decrypt
+from paseto.protocol.version2 import create_symmetric_key, decrypt, encrypt
 
 message = b"foo"  # your data
-key = b"0" * 32  # encryption key
+key = create_symmetric_key()  # encryption key
 
 token = encrypt(message, key)
 plain_text = decrypt(token, key)
@@ -45,10 +45,10 @@ print(f"message={message}")
 ```
 ### With optional footer
 ```python
-from paseto.protocol.version2 import encrypt, decrypt
+from paseto.protocol.version2 import create_symmetric_key, decrypt, encrypt
 
 message = b"foo"  # your data
-key = b"0" * 32  # encryption key
+key = create_symmetric_key()  # encryption key
 optional_footer = b"sample_footer"  # authenticated but not encrypted metadata
 
 token = encrypt(message, key, optional_footer)

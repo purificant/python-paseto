@@ -35,7 +35,6 @@ _RAW_KEY_LENGTHS: dict[bytes, int] = {
 
 def _create_symmetric_key(version: int, raw_key_material: bytes = b"") -> bytes:
     """Return a new symmetric key."""
-    _validate_version(version)
     if not raw_key_material:
         raw_key_material = os.urandom(_KEY_LENGHT)
     return _serialize_key(version, _TYPE_LOCAL, raw_key_material)
@@ -47,7 +46,6 @@ def _create_asymmetric_key(
     raw_secret_key_material: bytes = b"",
 ) -> tuple[bytes, bytes]:
     """Return new public and secret keys."""
-    _validate_version(version)
     if not raw_public_key_material or not raw_secret_key_material:
         (
             raw_public_key_material,
@@ -92,8 +90,9 @@ def _deserialize_key(key: bytes, version: int, key_type: bytes) -> bytes:
     except InvalidEncoding as error:
         raise InvalidKey("Invalid key encoding") from error
 
-    # older releases wrote keys with "=" padding, keep reading that exact form
-    if encoded not in (b64(raw_key), urlsafe_b64encode(raw_key)):
+    # older releases wrote k4 keys with "=" padding, keep reading that exact form
+    legacy_padded: bool = version == 4 and encoded == urlsafe_b64encode(raw_key)
+    if encoded != b64(raw_key) and not legacy_padded:
         raise InvalidKey("Invalid key encoding")
 
     _check_raw_key(raw_key, key_type)
@@ -116,11 +115,17 @@ def _check_raw_key(raw_key: bytes, key_type: bytes) -> None:
 
 def _validate_version(version: int) -> bool:
     """Validate all supported protocol versions."""
-    return version in [4]
+    return version in [2, 4]
 
 
 def _get_key_prefix(version: int, key_type: bytes) -> bytes:
-    """Return key prefix for serialization."""
+    """Return key prefix for serialization.
+
+    Raises:
+        ValueError: If version is not supported.
+    """
+    if not _validate_version(version):
+        raise ValueError(f"Unsupported version: {version}")
     return _KEY_PREFIX + str(version).encode() + key_type
 
 

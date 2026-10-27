@@ -159,7 +159,7 @@ def test_v2_local(
     # transform input from strings that can easily be compared to rfc spec to bytes object
     form = reformat
 
-    key: bytes = bytes.fromhex(form(key_str))
+    key: bytes = version2.import_symmetric_key(bytes.fromhex(form(key_str)))
     nonce: bytes = bytes.fromhex(form(nonce_str))
     token: bytes = form(token_str).encode()
 
@@ -241,8 +241,10 @@ def test_v2_public(
     form = reformat
 
     token: bytes = form(token_str).encode()
-    private_key: bytes = bytes.fromhex(form(private_key_str))
-    public_key: bytes = bytes.fromhex(form(public_key_str))
+    private_key: bytes = version2.import_secret_key(
+        bytes.fromhex(form(private_key_str))
+    )
+    public_key: bytes = version2.import_public_key(bytes.fromhex(form(public_key_str)))
 
     # verify that sign produces expected token
     assert token == version2.sign(payload, private_key, footer), name

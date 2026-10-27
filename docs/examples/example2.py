@@ -1,7 +1,7 @@
-from paseto.protocol.version2 import decrypt, encrypt
+from paseto.protocol.version2 import create_symmetric_key, decrypt, encrypt
 
 message = b"foo"  # your data
-key = b"0" * 32  # encryption key
+key = create_symmetric_key()  # encryption key
 optional_footer = b"sample_footer"  # authenticated but not encrypted metadata
 
 token = encrypt(message, key, optional_footer)

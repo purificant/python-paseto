@@ -1,5 +1,7 @@
 """This module contains utility functions used in tests."""
 
+from paseto.protocol.util import b64
+
 TransformedTestCaseV4 = tuple[str, bytes, bytes, bytes, bytes, bytes, bytes]
 TransformedTestCaseV2 = tuple[str, bytes, bytes, bytes, bytes, bytes]
 
@@ -89,3 +91,10 @@ def non_canonical_variants(token: bytes, header: bytes) -> list[bytes]:
     junk: bytes = body[:4] + b"!!!!" + body[4:]
 
     return [header + variant for variant in [flipped, padded, junk]]
+
+
+def extra_segment_variants(token: bytes, footer: bytes) -> list[bytes]:
+    """Return tokens with an extra "." segment before the footer, or at the end without one."""
+    tail: bytes = b"." + b64(footer) if footer else b""
+    body: bytes = token.removesuffix(tail)
+    return [body + extra + tail for extra in [b".", b"..", b".junk", b"." + b64(b"x")]]
