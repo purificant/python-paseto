@@ -50,9 +50,8 @@ jobs:
         run: brew install libsodium
 
       - name: Install dependencies
-        run: |
-          python -m pip install --no-cache-dir --upgrade pip
-          python -m pip install --no-cache-dir --require-hashes --requirement requirements-dev.txt
+        # build constraints apply the lock's hashes to build dependencies too
+        run: python -m pip install --require-hashes --requirement requirements-dev.txt --build-constraint requirements-dev.txt
 
       - name: Run code linting checks
         run: make ci-lint
