@@ -19,7 +19,7 @@ jobs:
     strategy:
       matrix:
         python-version: ['3.11', '3.12', '3.13', '3.14', '3.15']
-        os: ['ubuntu-slim', 'windows-latest'] # TODO: re-add 'macos-latest'
+        os: ['ubuntu-slim', 'windows-latest', 'macos-latest']
       # do not cancel any jobs when a single job fails
       fail-fast: false
     name: Python ${{ matrix.python-version }} on ${{ matrix.os }}
@@ -45,6 +45,10 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends libsodium23
 
+      - name: Install libsodium on macOS
+        if: runner.os == 'macOS'
+        run: brew install libsodium
+
       - name: Install dependencies
         run: |
           python -m pip install --no-cache-dir --upgrade pip
@@ -54,7 +58,16 @@ jobs:
         run: make ci-lint
 
       - name: Run tests with code coverage
+        if: runner.os != 'macOS'
         run: make coverage
+
+      # macOS strips DYLD_* vars when it starts make
+      - name: Run tests with code coverage on macOS
+        if: runner.os == 'macOS'
+        run: |
+          export DYLD_LIBRARY_PATH=$(brew --prefix libsodium)/lib
+          cmds=$(make -n coverage)
+          eval "$cmds"
 
       - name: Upload coverage data to coveralls.io
         uses: coverallsapp/github-action@v2
